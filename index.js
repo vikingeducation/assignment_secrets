@@ -9,41 +9,48 @@ const models = require('./models');
 const User = models.User;
 const Secret = models.Secret;
 
+const {
+  createSignedSessionId,
+  loggedInOnly,
+  loggedOutOnly,
+  loginMiddleware
+} = require('./services/Session');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(loginMiddleware);
 
 const exphbs = require('express-handlebars');
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
-app.get('/', (req, res) => {
+app.get('/', loggedOutOnly, (req, res) => {
+  console.log(res);
   res.render('landing');
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', loggedOutOnly, (req, res) => {
   res.render('login');
 });
 
-app.get('/signup', (req, res) => {
+app.get('/signup', loggedOutOnly, (req, res) => {
   res.render('signup');
 });
 
-app.get('/home', (req, res) => {
+app.get('/home', loggedInOnly, (req, res) => {
   res.render('home');
 });
 
-app.get('/secrets', (req, res) => {
+app.get('/secrets', loggedInOnly, (req, res) => {
   res.render('allsecrets');
 });
 
 app.get('/logout', (req, res) => {
-  res.cookie('sessionId', '');
-  app.locals.username = '';
+  res.cookie('sessionId', '', { expires: new Date() });
+  res.locals.username = '';
   res.redirect('/');
 });
-
-const { createSignedSessionId } = require('./services/Session');
 
 app.post('/newsignup', (req, res) => {
   let newUsername = req.body.username;
@@ -55,7 +62,7 @@ app.post('/newsignup', (req, res) => {
   }).spread(user => {
     let sessionId = createSignedSessionId(user.username);
     res.cookie('sessionId', sessionId);
-    app.locals.username = user.username;
+    res.locals.username = user.username; //do this in the middleware
     res.redirect('home');
   });
 });
@@ -77,7 +84,7 @@ app.post('/userlogin', (req, res) => {
     });
 });
 
-app.post('/postSecret', (req, res) => {
+app.post('/postSecret', loggedInOnly, (req, res) => {
   let username = req.cookies.sessionId.split(':')[0];
   let content = req.body.content;
 
@@ -89,7 +96,7 @@ app.post('/postSecret', (req, res) => {
       Secret.create({ content: content, userId: userId });
     })
     .then(secret => {
-      res.redirect('/');
+      res.redirect('/home');
     });
 });
 
