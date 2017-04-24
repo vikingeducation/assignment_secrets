@@ -1,0 +1,20 @@
+<div>
+  <h1>New Secret</h1>
+  <form action="/new" method="POST">
+    <div class="form-group">
+      <textarea class="form-control" rows="3" placeholder="Tell me a secret..." name="newSecret"></textarea>
+    </div>
+    <div class="col-sm-10">
+        <button type="submit" class="btn btn-default">Save Secret</button>
+      </div>
+  </form>
+  <br>
+</div>
+
+<div>
+  <h1>Your Secrets</h1>
+  {{#each secrets as |secret|}}
+    <p>{{secret.body}}</p>
+    <p>By {{secret.ownerId.username}} on {{formatDate secret.createdAt}}</p>
+  {{/each}}
+</div>
