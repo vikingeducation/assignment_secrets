@@ -1,0 +1,34 @@
+{
+  "name": "assignment_secrets",
+  "version": "1.0.0",
+  "description": "Build a web app that allows users to store and share their darkest secrets.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eglital/assignment_secrets.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eglital/assignment_secrets/issues"
+  },
+  "homepage": "https://github.com/eglital/assignment_secrets#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "^2.0.0-beta.1",
+    "express": "^4.15.2",
+    "express-flash-messages": "^0.1.1",
+    "express-handlebars": "^3.0.0",
+    "md5": "^2.2.1",
+    "moment": "^2.18.1",
+    "mongoose": "^4.9.6",
+    "mongoose-unique-validator": "^1.0.5",
+    "morgan": "^1.8.1"
+  }
+}
