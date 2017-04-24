@@ -17,7 +17,12 @@
 {{#each ownedSecrets as |ownedSecret|}}
   <h5>{{ownedSecret.content}}</h5>
   <p>{{ownedSecret.username}} on {{ownedSecret.createdAt}}</p>
-  {{/each}}
+    {{#each ownedSecret.userIdsReqAccess as |request|}}
+      <p>Get username</p>
+      <button type="submit">Accept</button>
+      <button type="submit">Reject</button>
+    {{/each}}
+{{/each}}
 {{!-- <ul>
       <ul>
         <h5>Request for this secret from user Joe</h5>

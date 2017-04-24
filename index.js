@@ -38,15 +38,21 @@ app.get('/signup', loggedOutOnly, (req, res) => {
   res.render('signup');
 });
 
+app.get('/test', (req, res) => {
+  Secret.findAll().then(secrets => {
+    res.send(secrets);
+  });
+});
+
 app.get('/home', loggedInOnly, (req, res) => {
-  User.find({ where: { username: res.locals.username } }).then(user => {
-      Secret.findAll({
-        where: { userId: user.id }
-      })
-    .spread(ownedSecrets => {
-      res.render('home', {ownedSecrets})
-    }) 
-  })
+  User.findOne({ where: { username: res.locals.username } }).then(user => {
+    Secret.findAll({
+      where: { userId: user.id }
+    }).then(ownedSecrets => {
+      //this gives us all secrets which have an array of
+      res.render('home', { ownedSecrets });
+    });
+  });
 });
 
 app.get('/secrets', loggedInOnly, (req, res) => {
@@ -78,38 +84,42 @@ app.post('/userlogin', (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
 
-  User.find({ where: { username: username } }).then(user => {
-    if (user.username == username) {
-      if (bcrypt.compareSync(password, user.passHash)) {
-        let sessionId = createSignedSessionId(user.username);
-        res.cookie('sessionId', sessionId);
-        res.redirect('/home');
+  User.find({ where: { username: username } })
+    .then(user => {
+      if (user.username == username) {
+        if (bcrypt.compareSync(password, user.passHash)) {
+          let sessionId = createSignedSessionId(user.username);
+          res.cookie('sessionId', sessionId);
+          // res.redirect('/home');
+        } else {
+          res.send('Password did not match');
+        }
       } else {
-        res.send('Password did not match');
+        res.send('User not found');
       }
-    } else {
-      res.send('User not found');
-    }
-  });
-  // .then(() => {
-  //   res.redirect('/home');
-  // });
+    })
+    .then(() => {
+      res.redirect('/home');
+    });
 });
 
-app.post('/postSecret', loggedInOnly, (req, res) => {
+app.post('/postSecret', (req, res) => {
   let username = req.cookies.sessionId.split(':')[0];
   let content = req.body.content;
 
-  User.find({
+  User.findOne({
     where: { username: username }
-  })
-    .then(user => {
-      let userId = user.id;
-      Secret.create({ content: content, userId: userId });
-    })
-    .then(secret => {
+  }).then(user => {
+    console.log(user);
+    let userId = user.id;
+    Secret.create({ content: content, userId: userId }).then(() => {
       res.redirect('/home');
     });
+    //res.redirect('/home');
+  });
+  // .then(secret => {
+  //   res.redirect('/home');
+  // });
 });
 
 app.listen(3000);
