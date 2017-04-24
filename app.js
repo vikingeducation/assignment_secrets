@@ -4,6 +4,8 @@ var app = express();
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var cookieParser = require("cookie-parser");
+app.use(cookieParser());
 var cookieSession = require("cookie-session");
 
 app.use(
@@ -60,15 +62,15 @@ app.use((req, res, next) => {
   });
   next();
 });
-//
-// var mongoose = require("mongoose");
-// app.use((req, res, next) => {
-//   if (mongoose.connection.readyState) {
-//     next();
-//   } else {
-//     require("./mongo")(req).then(() => next());
-//   }
-// });
+
+var mongoose = require("mongoose");
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState) {
+    next();
+  } else {
+    require("./mongo")(req).then(() => next());
+  }
+});
 
 //////////////////////////////////////
 //user model helpers + session helpers

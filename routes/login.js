@@ -1,16 +1,37 @@
 var express = require("express");
 var router = express.Router();
 var mongoose = require("mongoose");
-//var models = require("./../models");
-//var User = mongoose.model("User");
+var models = require("./../models");
 
-router.get("/", (req, res) => {
-  res.render("login/index");
+var User = mongoose.model("User");
+var {
+  createSignedSessionId,
+  loginMiddleware,
+  loggedOutOnly,
+  loggedInOnly
+} = require('../services/Session');
+
+// Route helpers
+var helpers = require('../helpers');
+var h = helpers.registered;
+
+router.get("/login", loggedOutOnly, (req, res) => {
+  res.render("login");
 });
 
-router.post("/", (req, res) => {
+router.post("/login", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
+  User.create({
+    email: email,
+    password: password
+  })
+  .then((user) => {
+    console.log("New user created: ", user)
+    res.cookie("sessionId", createSignedSessionId(user.email));
+    res.redirect(h.indexPath())
+  })
+  .catch(next);
 });
 
 module.exports = router;

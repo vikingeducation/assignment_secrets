@@ -25,6 +25,7 @@
     "cookie-session": "^2.0.0-beta.1",
     "express": "^4.15.2",
     "express-handlebars": "^3.0.0",
+    "md5": "^2.2.1",
     "mongoose": "^4.9.6",
     "mongoose-unique-validator": "^1.0.5",
     "morgan": "^1.8.1"
