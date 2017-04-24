@@ -1,26 +1,32 @@
 <h1>Hello {{currentUser.email}}</h1>
 
-<form action="/secret" method="post">
+<form action="/secret" method="POST">
   <div class="form-group">
-    <label for="exampleInputEmail1">Secret</label>
-    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="secret">
+    <label for="secret">Secret</label>
+    <input type="text" class="form-control" name="secret" id="secret" placeholder="secret">
   </div>
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
 
 
-{{#if secretList.length }}
+{{#if secrets.length }}
   <table class="table">
     <thead>
       <tr>
         <th>Secrets</th>
+        <th>Shared with</th>
       </tr>
     </thead>
     <tbody>
-      {{#each secretList as |secret| }}
+      {{#each secrets as |secret| }}
         <tr>
           <td>
           {{ secret.body }}
+          </td>
+          <td>
+          {{#each secret.viewers as |viewer|}}
+            {{viewer.email}}&nbsp;
+          {{/each}}
           </td>
         </tr>
       {{/each }}
