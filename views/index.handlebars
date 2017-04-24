@@ -1,1 +1,31 @@
-<h1>Hello world</h1>
+<h1>Hello {{currentUser.email}}</h1>
+
+<form action="/secret" method="post">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Secret</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="secret">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+
+{{#if secretList.length }}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Secrets</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each secretList as |secret| }}
+        <tr>
+          <td>
+          {{ secret.body }}
+          </td>
+        </tr>
+      {{/each }}
+    </tbody>
+  </table>
+{{else }}
+  <p class="text-danger">No Secrets</p>
+{{/if }}
