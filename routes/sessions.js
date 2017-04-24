@@ -22,20 +22,35 @@ router.get("/login", loggedOutOnly, (req, res) => {
 router.post("/login", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  User.create({
-    email: email,
-    password: password
+  // check if user exists:
+  User.findOne({email: email})
+  .then((user) => {
+    if (user){
+      if (user.validatePassword(password)){
+        res.cookie("sessionId", createSignedSessionId(user.email));
+        res.redirect(h.indexPath());
+      }
+      else {
+        req.flash('error', 'Incorrect password');
+        res.redirect(h.indexPath());
+      }
+    } else {
+      return User.create({
+        email: email,
+        password: password
+      })
+    }
   })
-    .then(user => {
-      console.log("New user created: ", user);
-      res.cookie("sessionId", createSignedSessionId(user.email));
-      res.redirect(h.indexPath());
-    })
-    .catch(e => res.status(500).send(e.stack));
+  .then ((user) => {
+    res.cookie("sessionId", createSignedSessionId(user.email));
+    res.redirect(h.indexPath());
+  })
+  .catch(e => res.status(500).send(e.stack));
 });
 
 router.get("/logout", (req, res) => {
-  res.cookie.sessionId = null;
+  console.log("res.cookie: ", res.cookie());
+  res.clearCookie("sessionId");
   res.redirect("/");
 });
 

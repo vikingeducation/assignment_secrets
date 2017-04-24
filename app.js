@@ -6,6 +6,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
+
 var cookieSession = require("cookie-session");
 app.use(
   cookieSession({
@@ -14,6 +15,11 @@ app.use(
   })
 );
 
+// ----------------------------------------
+// Flash Messages
+// ----------------------------------------
+var flash = require('express-flash-messages');
+app.use(flash());
 
 app.use((req, res, next) => {
   res.locals.session = req.session;
