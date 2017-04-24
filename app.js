@@ -6,14 +6,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
-// var cookieSession = require("cookie-session");
-//
-// app.use(
-//   cookieSession({
-//     name: "session",
-//     keys: ["asdf1234567890qwer"]
-//   })
-// );
+var cookieSession = require("cookie-session");
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["asdf1234567890qwer"]
+  })
+);
+
 
 app.use((req, res, next) => {
   res.locals.session = req.session;

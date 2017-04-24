@@ -34,4 +34,11 @@ router.post("/login", (req, res) => {
     .catch(e => res.status(500).send(e.stack));
 });
 
+router.get("/logout", (req, res) => {
+  res.cookie.sessionId = null;
+  res.redirect("/");
+});
+
+
+
 module.exports = router;
