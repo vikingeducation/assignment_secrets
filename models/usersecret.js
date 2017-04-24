@@ -12,13 +12,12 @@ module.exports = function(sequelize, DataTypes) {
       classMethods: {
         associate: function(models) {
           Usersecret.belongsTo(models.Secret, {
-            foreignKey: "secretId"
+            foreignKey: 'secretId'
           });
 
           Usersecret.belongsTo(models.User, {
-            foreignKey: "userId"
+            foreignKey: 'userId'
           });
-
         }
       }
     }

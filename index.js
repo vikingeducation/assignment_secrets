@@ -48,9 +48,7 @@ app.get('/test', (req, res) => {
 app.get('/home', loggedInOnly, (req, res) => {
   User.findOne({ where: { username: res.locals.username } }).then(user => {
     Secret.findAll({
-      include: [
-        { all: true }
-      ],
+      include: [{ all: true }],
       where: { userId: user.id },
       raw: true
     }).then(ownedSecrets => {
@@ -62,7 +60,15 @@ app.get('/home', loggedInOnly, (req, res) => {
 });
 
 app.get('/secrets', loggedInOnly, (req, res) => {
-  res.render('allsecrets');
+  User.findOne({ where: { username: res.locals.username } }).then(user => {
+    Secret.findAll({
+      include: [{ all: true }],
+      raw: true
+    }).then(secrets => {
+      console.log(secrets);
+      res.render('allsecrets', { secrets });
+    });
+  });
 });
 
 app.get('/logout', (req, res) => {
