@@ -26,11 +26,11 @@ const loggedOutOnly = (req, res, next) => {
 };
 
 const loginMiddleware = (req, res, next) => {
-  console.log(req);
   const sessionId = req.cookies.sessionId;
   if (!sessionId) return next();
 
   const [username, signature] = sessionId.split(':');
+  res.locals.username = username;
 
   User.find({ where: { username: username } }).then(user => {
     if (signature === generateSignature(username)) {

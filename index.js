@@ -26,7 +26,6 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 app.get('/', loggedOutOnly, (req, res) => {
-  console.log(res);
   res.render('landing');
 });
 
@@ -38,7 +37,7 @@ app.get('/signup', loggedOutOnly, (req, res) => {
   res.render('signup');
 });
 
-app.get('/home', loggedInOnly, (req, res) => {
+app.get('/home', (req, res) => {
   res.render('home');
 });
 
@@ -48,6 +47,7 @@ app.get('/secrets', loggedInOnly, (req, res) => {
 
 app.get('/logout', (req, res) => {
   res.cookie('sessionId', '', { expires: new Date() });
+  req.user = null;
   res.locals.username = '';
   res.redirect('/');
 });
