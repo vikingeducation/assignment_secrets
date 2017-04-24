@@ -5,13 +5,11 @@ const cookieParser = require('cookie-parser');
 
 //Required models:
 
-const User = require('./models/User');
+const models = require('./models');
+const User = models.User;
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
 
 const exphbs = require('express-handlebars');
 
@@ -30,6 +28,8 @@ app.get('/signup', (req, res) => {
   res.render('signup');
 });
 
+const {createSignedSessionId} = require("./services/Session")
+
 app.post('/newsignup', (req, res) => {
   let newUsername = req.body.username;
   let newPassword = req.body.password;
@@ -38,8 +38,12 @@ app.post('/newsignup', (req, res) => {
     where: { username: newUsername },
     defaults: { username: newUsername, password: newPassword }
   }).spread(user => {
-    console.log(user);
+    let sessionId = createSignedSessionId(user.username)
+    res.cookie("sessionId", sessionId);
+    res.redirect("index");
   });
 });
+
+
 
 app.listen(3000);
