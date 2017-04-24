@@ -22,7 +22,6 @@ router.get("/login", loggedOutOnly, (req, res) => {
 router.post("/login", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  // check if user exists:
   User.findOne({email: email})
   .then((user) => {
     if (user){
@@ -49,8 +48,7 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  console.log("res.cookie: ", res.cookie());
-  res.clearCookie("sessionId");
+  res.cookie('sessionId', '', {expires: new Date()})
   res.redirect("/");
 });
 
