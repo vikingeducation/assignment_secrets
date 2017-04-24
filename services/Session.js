@@ -13,15 +13,16 @@ const loggedInOnly = (req, res, next) => {
   if (req.user) {
     next();
   } else {
-    res.redirect('login');
+    res.redirect('/');
   }
 };
 
 const loggedOutOnly = (req, res, next) => {
+  // If user has never been to page, or has logged out
   if (!req.user) {
     next();
   } else {
-    res.redirect('/');
+    res.redirect('/home');
   }
 };
 
@@ -39,14 +40,6 @@ const loginMiddleware = (req, res, next) => {
       next();
     }
   });
-  // if (signature === generateSignature(username)) {
-  //   console.log("Search matched");
-  //   req.user = user;
-  //   res.locals.currentUser = user;
-  //   next();
-  // } else {
-  //   res.send("You've tampered with your session!");
-  // }
 };
 
 module.exports = {

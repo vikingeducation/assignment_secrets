@@ -2,6 +2,7 @@ const app = require('express')();
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 //Required models:
 
@@ -37,7 +38,7 @@ app.get('/signup', loggedOutOnly, (req, res) => {
   res.render('signup');
 });
 
-app.get('/home', (req, res) => {
+app.get('/home', loggedInOnly, (req, res) => {
   res.render('home');
 });
 
@@ -62,7 +63,6 @@ app.post('/newsignup', (req, res) => {
   }).spread(user => {
     let sessionId = createSignedSessionId(user.username);
     res.cookie('sessionId', sessionId);
-    res.locals.username = user.username; //do this in the middleware
     res.redirect('home');
   });
 });
@@ -71,17 +71,22 @@ app.post('/userlogin', (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
 
-  User.find({ where: { like: { username: username } } })
-    .spread(user => {
-      if (user.username == username) {
-        console.log('Found user: ', user);
+  User.find({ where: { username: username } }).then(user => {
+    if (user.username == username) {
+      if (bcrypt.compareSync(password, user.passHash)) {
+        let sessionId = createSignedSessionId(user.username);
+        res.cookie('sessionId', sessionId);
+        res.redirect('/home');
       } else {
-        console.log("Didn't find user: ", username);
+        res.send('Password did not match');
       }
-    })
-    .then(() => {
-      res.redirect('/home');
-    });
+    } else {
+      res.send('User not found');
+    }
+  });
+  // .then(() => {
+  //   res.redirect('/home');
+  // });
 });
 
 app.post('/postSecret', loggedInOnly, (req, res) => {
