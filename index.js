@@ -17,7 +17,7 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 app.get('/', (req, res) => {
-  res.render('home');
+  res.render('landing');
 });
 
 app.get('/login', (req, res) => {
@@ -28,7 +28,17 @@ app.get('/signup', (req, res) => {
   res.render('signup');
 });
 
-const {createSignedSessionId} = require("./services/Session")
+app.get('/home', (req, res) => {
+  res.render('home');
+});
+
+app.get('/logout', (req, res) => {
+  res.cookie('sessionId', '');
+  app.locals.username = '';
+  res.redirect('/');
+});
+
+const { createSignedSessionId } = require('./services/Session');
 
 app.post('/newsignup', (req, res) => {
   let newUsername = req.body.username;
@@ -38,12 +48,11 @@ app.post('/newsignup', (req, res) => {
     where: { username: newUsername },
     defaults: { username: newUsername, password: newPassword }
   }).spread(user => {
-    let sessionId = createSignedSessionId(user.username)
-    res.cookie("sessionId", sessionId);
-    res.redirect("index");
+    let sessionId = createSignedSessionId(user.username);
+    res.cookie('sessionId', sessionId);
+    app.locals.username = user.username;
+    res.redirect('home');
   });
 });
-
-
 
 app.listen(3000);
