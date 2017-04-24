@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt');
 const models = require('./models');
 const User = models.User;
 const Secret = models.Secret;
+const Usersecret = models.Usersecret;
 
 const {
   createSignedSessionId,
@@ -47,9 +48,14 @@ app.get('/test', (req, res) => {
 app.get('/home', loggedInOnly, (req, res) => {
   User.findOne({ where: { username: res.locals.username } }).then(user => {
     Secret.findAll({
-      where: { userId: user.id }
+      include: [
+        { all: true }
+      ],
+      where: { userId: user.id },
+      raw: true
     }).then(ownedSecrets => {
       //this gives us all secrets which have an array of
+      console.log(ownedSecrets);
       res.render('home', { ownedSecrets });
     });
   });

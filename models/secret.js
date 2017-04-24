@@ -11,7 +11,15 @@ module.exports = function(sequelize, DataTypes) {
     {
       classMethods: {
         associate: function(models) {
-          // Secrets belong to one user
+          Secret.hasMany(models.Usersecret, {
+            foreignKey: 'secretId'
+          });
+
+          Secret.belongsToMany(models.User, {
+            through: models.Usersecret,
+            as: 'Usersecret',
+            foreignKey: 'secretId'
+          });
         }
       }
     }
