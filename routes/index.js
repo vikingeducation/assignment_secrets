@@ -6,7 +6,7 @@ var models = require("./../models");
 var User = mongoose.model("User");
 var Secret = mongoose.model("Secret");
 
-var Cypher = require('../lib/Cipher');
+var Cipher = require('../lib/Cipher');
 
 var {
   createSignedSessionId,
@@ -39,19 +39,28 @@ router.post("/secret", loggedInOnly, (req, res) => {
   let key = req.body.cipherKey;
   if(key){
     let encrypted = Cipher.encrypt(secret, key);
+    Secret.create({
+      author: req.user._id,
+      body: encrypted,
+      viewers: [req.user._id],
+      cipher: true
+    })
+    .then(secret => {
+      res.redirect(h.indexPath());
+    })
+    .catch(e => res.status(500).send(e.stack));
   } else {
-
+    Secret.create({
+      author: req.user._id,
+      body: secret,
+      viewers: [req.user._id],
+      cipher: false
+    })
+    .then(secret => {
+      res.redirect(h.indexPath());
+    })
+    .catch(e => res.status(500).send(e.stack));
   }
-  Secret.create({
-    author: req.user._id,
-    body: secret,
-    viewers: [req.user._id]
-  })
-  .then(secret => {
-    res.redirect(h.indexPath());
-  })
-  .catch(e => res.status(500).send(e.stack));
-
 });
 
 router.get("/secrets", loggedInOnly, (req, res) => {
@@ -74,11 +83,13 @@ router.get("/secrets", loggedInOnly, (req, res) => {
         _id: 1,
         body: 1,
         author: 1,
+        cipher: 1,
         viewers: { $elemMatch: { $ne: req.user._id } }
       }
     ).populate("author")
   })
   .then(unavailableSecrets => {
+    console.log("unavailableSecrets: ", unavailableSecrets)
     res.render("secrets/index", { accessibleSecrets, unavailableSecrets });
   })
   .catch(e => res.status(500).send(e.stack));
@@ -116,6 +127,14 @@ router.post("/deny", (req, res) => {
     res.redirect('back')
   })
   .catch(e => res.status(500).send(e.stack));
+});
+
+
+router.post("/guessCipher", (req, res) => {
+  let decrypted  = Cipher.decrypt(secret, key);
+  // get the decrypted message and then render a flash
+  res.redirect('back')
+
 });
 
 module.exports = router;
