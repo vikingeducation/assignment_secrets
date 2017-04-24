@@ -1,5 +1,6 @@
 // Create our app
-const app = require("express")();
+const express = require("express");
+const app = express();
 
 // Require and mount the cookie and body parser middlewares
 const bodyParser = require("body-parser");
@@ -7,6 +8,11 @@ const cookieParser = require("cookie-parser");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// ----------------------------------------
+// Public
+// ----------------------------------------
+app.use(express.static(`${__dirname}/public`));
 
 // ----------------------------------------
 // Logging
@@ -46,6 +52,18 @@ app.engine(
     helpers: {
       formatDate: function(date) {
         return moment(date).format("MMM Do YY");
+      },
+      isIn: function(item, array) {
+        return array.filter(el => {
+          return el.toString() === item.toString();
+        }).length;
+      },
+      bootstrapAlertClassFor: function(key) {
+        return {
+          error: "danger",
+          alert: "danger",
+          notice: "info"
+        }[key] || key;
       }
     }
   })
@@ -64,10 +82,30 @@ const {
 app.use(loginMiddleware);
 
 // ----------------------------------------
+// Sessions/Cookies
+// ----------------------------------------
+var cookieSession = require("cookie-session");
+
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["asdf1234567890qwer"]
+  })
+);
+
+// ----------------------------------------
+// Flash Messages
+// ----------------------------------------
+var flash = require("express-flash-messages");
+app.use(flash());
+
+// ----------------------------------------
 // Routes
 // ----------------------------------------
-const indexRouter = require("./routers/index");
-app.use("/", indexRouter);
+const sessionsRouter = require("./routers/sessions");
+app.use("/", sessionsRouter);
+const secretsRouter = require("./routers/secrets");
+app.use("/", secretsRouter);
 
 // Start our app
 app.listen(3000);

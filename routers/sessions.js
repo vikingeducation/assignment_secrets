@@ -3,20 +3,12 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const models = require("./../models");
 const User = mongoose.model("User");
-const Secret = mongoose.model("Secret");
 const {
   createSignedSessionId,
   loginMiddleware,
   loggedInOnly,
   loggedOutOnly
 } = require("../services/Session");
-const findSecrets = require("../lib/findSecrets");
-
-router.get("/", loggedInOnly, (req, res) => {
-  findSecrets.ownedByMe(req.user._id).then(secrets => {
-    res.render("home", { secrets });
-  });
-});
 
 router.get("/login", loggedOutOnly, (req, res) => {
   res.render("login");
@@ -27,7 +19,8 @@ router.get("/register", loggedOutOnly, (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  res.cookie("sessionId", "", { expires: Date.now() });
+  res.cookie("sessionId", "", { expires: new Date() });
+  // req.flash("success", "Successfully looged out");
   res.redirect("/");
 });
 
@@ -35,14 +28,17 @@ router.post("/login", (req, res) => {
   const { email, password } = req.body;
 
   User.findOne({ email }, (err, user) => {
-    if (!user) return res.send("NO USER");
+    if (!user) {
+      req.flash("error", "User doesn't exist");
+    }
 
     if (user.validatePassword(password)) {
       const sessionId = createSignedSessionId(email);
       res.cookie("sessionId", sessionId);
       res.redirect("/");
     } else {
-      res.send("WRONG PASSWORD");
+      req.flash("error", "Incorrect password!");
+      res.redirect("/");
     }
   });
 });
@@ -59,23 +55,9 @@ router.post("/register", (req, res) => {
     // we did in the login POST route
     const sessionId = createSignedSessionId(email);
     res.cookie("sessionId", sessionId);
+    req.flash("success", "New user is created!");
     res.redirect("/");
   });
-});
-
-router.post("/new", (req, res) => {
-  let userId = req.user._id;
-  let newSecret = req.body.newSecret;
-  var secret = new Secret({
-    ownerId: userId,
-    body: newSecret
-  });
-  secret
-    .save()
-    .then(() => {
-      res.redirect("/");
-    })
-    .catch(e => res.status(500).send(e.stack));
 });
 
 module.exports = router;

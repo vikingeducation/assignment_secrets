@@ -27,6 +27,22 @@ const SecretSchema = Schema(
   }
 );
 
+SecretSchema.statics.ownedByMe = function(ownerId) {
+  return Secret.find({
+    ownerId
+  }).populate("ownerId whoRequested");
+};
+SecretSchema.statics.userHasAccess = function(ownerId) {
+  return Secret.find({ hasAccess: ownerId }).populate("ownerId");
+};
+SecretSchema.statics.all = function(ownerId) {
+  return Secret.find({ ownerId: { $ne: ownerId } }).populate("ownerId");
+};
+
+SecretSchema.statics.userRequested = function(ownerId) {
+  return Secret.find({ whoRequested: ownerId }).lean().distinct("_id");
+};
+
 const Secret = mongoose.model("Secret", SecretSchema);
 
 module.exports = Secret;
