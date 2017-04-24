@@ -35,3 +35,41 @@
 {{else }}
   <p class="text-danger">No Secrets</p>
 {{/if }}
+
+
+<h1>Requests for access</h1>
+{{#if requests.length }}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Secret</th>
+        <th>Requested by</th>
+        <th>-</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each requests as |request| }}
+        {{#each request.requests as |userRequest|}}
+          <tr>
+            <td>{{request.body}}</td>
+            <td>{{userRequest.email}}</td>
+            <td>
+              <form action="/approve" method="POST">
+                <input type="hidden" name="userId" value="{{userRequest._id}}">
+                <input type="hidden" name="secretId" value="{{request._id}}">
+                <button class="btn btn-primary">approve</button>
+              </form>
+              <form action="/deny" method="POST">
+                <input type="hidden" name="userId" value="{{userRequest._id}}">
+                <input type="hidden" name="secretId" value="{{request._id}}">
+                <button class="btn btn-danger">deny</button>
+              </form>
+          </td>
+          </tr>
+        {{/each}}
+      {{/each }}
+    </tbody>
+  </table>
+{{else }}
+  <p class="text-danger">No requests</p>
+{{/if }}

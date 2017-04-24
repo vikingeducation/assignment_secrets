@@ -21,11 +21,15 @@ router.get("/", loggedInOnly, (req, res) => {
   Secret.find({
     author: req.user._id
   })
-    .populate("viewers")
-    .then(secrets => {
-      res.render("index", { secrets });
+  .populate("viewers")
+  .populate("requests")
+  .then(secrets => {
+    let requests = secrets.filter((secret) => {
+      return secret.requests.length > 0;
     })
-    .catch(e => res.status(500).send(e.stack));
+    res.render("index", { secrets, requests });
+  })
+  .catch(e => res.status(500).send(e.stack));
 });
 
 router.post("/secret", loggedInOnly, (req, res) => {
@@ -46,39 +50,63 @@ router.get("/secrets", loggedInOnly, (req, res) => {
   Secret.find(
     { viewers: { $in: [req.user._id] } },
     {
-      _id: 0,
+      _id: 1,
       body: 1,
       author: 1,
       viewers: { $elemMatch: { $eq: req.user._id } }
     }
   )
-    //  .populate("viewers")
-    .then(accessbile => {
-      console.log("accessbile secrets", accessbile);
-      accessibleSecrets = accessbile;
-      return Secret.find(
-        { viewers: { $nin: [req.user._id] } },
-        {
-          _id: 0,
-          body: 1,
-          author: 1,
-          viewers: { $elemMatch: { $ne: req.user._id } }
-        }
-      );
-    })
-    .then(unavailableSecrets => {
-      console.log("unavailableSecrets: ", unavailableSecrets);
-      res.render("secrets/index", { accessibleSecrets, unavailableSecrets });
-    })
-    .catch(e => res.status(500).send(e.stack));
+  .populate("author")
+  .then(accessible => {
+    accessibleSecrets = accessible;
+    return Secret.find(
+      { viewers: { $nin: [req.user._id] } },
+      {
+        _id: 1,
+        body: 1,
+        author: 1,
+        viewers: { $elemMatch: { $ne: req.user._id } }
+      }
+    ).populate("author")
+  })
+  .then(unavailableSecrets => {
+    res.render("secrets/index", { accessibleSecrets, unavailableSecrets });
+  })
+  .catch(e => res.status(500).send(e.stack));
 });
 
 router.post("/share", (req, res) => {
-  Secret.update({
-    _id: req.body.secretId
+  Secret.findByIdAndUpdate(req.body.secretId,
+  {
+    $addToSet: { requests: req.body.currentUserId }
   })
-    .then()
-    .catch(e => res.status(500).send(e.stack));
+  .then( (data) => {
+    res.redirect('back')
+  })
+  .catch(e => res.status(500).send(e.stack));
+});
+
+router.post("/approve", (req, res) => {
+  Secret.findByIdAndUpdate(req.body.secretId,
+  {
+    $pull: { requests: req.body.userId },
+    $push: { viewers: req.body.userId}
+  })
+  .then( (data) => {
+    res.redirect('back')
+  })
+  .catch(e => res.status(500).send(e.stack));
+});
+
+router.post("/deny", (req, res) => {
+  Secret.findByIdAndUpdate(req.body.secretId,
+  {
+    $pull: { requests: req.body.userId }
+  })
+  .then( (data) => {
+    res.redirect('back')
+  })
+  .catch(e => res.status(500).send(e.stack));
 });
 
 module.exports = router;

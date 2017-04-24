@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 const SecretSchema = mongoose.Schema({
-  author: { type: Schema.ObjectId, required: true },
+  author: { type: Schema.ObjectId, required: true, ref: "User" },
   body: { type: String, required: true },
   viewers: [{ type: Schema.ObjectId, ref: "User" }],
-  request: [{ type: Schema.ObjectId, ref: "User" }]
+  requests: [{ type: Schema.ObjectId, ref: "User" }]
 });
 
 const Secret = mongoose.model("Secret", SecretSchema);
