@@ -9,10 +9,10 @@ var {
   loginMiddleware,
   loggedOutOnly,
   loggedInOnly
-} = require('../services/Session');
+} = require("../services/Session");
 
 // Route helpers
-var helpers = require('../helpers');
+var helpers = require("../helpers");
 var h = helpers.registered;
 
 router.get("/login", loggedOutOnly, (req, res) => {
@@ -26,12 +26,12 @@ router.post("/login", (req, res) => {
     email: email,
     password: password
   })
-  .then((user) => {
-    console.log("New user created: ", user)
-    res.cookie("sessionId", createSignedSessionId(user.email));
-    res.redirect(h.indexPath())
-  })
-  .catch(next);
+    .then(user => {
+      console.log("New user created: ", user);
+      res.cookie("sessionId", createSignedSessionId(user.email));
+      res.redirect(h.indexPath());
+    })
+    .catch(e => res.status(500).send(e.stack));
 });
 
 module.exports = router;

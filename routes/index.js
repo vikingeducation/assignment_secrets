@@ -9,10 +9,10 @@ var {
   loginMiddleware,
   loggedOutOnly,
   loggedInOnly
-} = require('../services/Session');
+} = require("../services/Session");
 
 // Route helpers
-var helpers = require('../helpers');
+var helpers = require("../helpers");
 var h = helpers.registered;
 
 router.get("/", loggedInOnly, (req, res) => {
