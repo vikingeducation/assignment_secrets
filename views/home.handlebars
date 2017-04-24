@@ -13,10 +13,12 @@
 
 <h2>Your secrets</h2>
 
-<ul>
-  <li>
-    <h5>I wrote this secret!</h5>
-    <h6>{{username}}</h6>
+
+{{#each ownedSecrets as |ownedSecret|}}
+  <h5>{{ownedSecret.content}}</h5>
+  <p>{{ownedSecret.username}} on {{ownedSecret.createdAt}}</p>
+  {{/each}}
+{{!-- <ul>
       <ul>
         <h5>Request for this secret from user Joe</h5>
         <form>
@@ -29,7 +31,7 @@
     <h5>I also wrote this secret!</h5>
     <h6>-{{username}}</h6>
   </li>
-</ul>
+</ul> --}}
 
 <h2>Shared secrets</h2>
 

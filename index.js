@@ -39,7 +39,14 @@ app.get('/signup', loggedOutOnly, (req, res) => {
 });
 
 app.get('/home', loggedInOnly, (req, res) => {
-  res.render('home');
+  User.find({ where: { username: res.locals.username } }).then(user => {
+      Secret.findAll({
+        where: { userId: user.id }
+      })
+    .spread(ownedSecrets => {
+      res.render('home', {ownedSecrets})
+    }) 
+  })
 });
 
 app.get('/secrets', loggedInOnly, (req, res) => {

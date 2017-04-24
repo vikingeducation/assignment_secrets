@@ -4,9 +4,9 @@ module.exports = function(sequelize, DataTypes) {
     'Secret',
     {
       content: DataTypes.STRING,
-      userId: DataTypes.INTEGER
-      //userIdsCanView: DataTypes.ARRAY(DataTypes.INTEGER)
-      //userIdsReqAccess: DataTypes.ARRAY(DataTypes.INTEGER)
+      userId: DataTypes.INTEGER,
+      userIdsCanView: DataTypes.ARRAY(DataTypes.INTEGER),
+      userIdsReqAccess: DataTypes.ARRAY(DataTypes.INTEGER)
     },
     {
       classMethods: {

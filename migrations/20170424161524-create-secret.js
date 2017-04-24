@@ -14,6 +14,12 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER
       },
+      userIdsCanView: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
+      },
+      userIdsReqAccess: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
