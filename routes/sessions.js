@@ -35,10 +35,8 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  res.cookie.sessionId = null;
-  res.redirect("/");
+  res.cookie("sessionId", "", { expires: new Date() });
+  res.redirect("/login");
 });
-
-
 
 module.exports = router;
