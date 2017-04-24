@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 
 const models = require('./models');
 const User = models.User;
+const Secret = models.Secret;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -50,9 +51,31 @@ app.post('/newsignup', (req, res) => {
   }).spread(user => {
     let sessionId = createSignedSessionId(user.username);
     res.cookie('sessionId', sessionId);
-    app.locals.username = user.username;
+    res.locals.username = user.username;
     res.redirect('home');
   });
 });
+
+app.post('/postSecret', (req, res) => {
+  let username = req.cookies.sessionId.split(":")[0];
+  let content = req.body.content;
+
+  User.find({
+    where: { username: username }
+  })
+    .then((user) => {
+      let userId = user.id;
+      Secret.create({content: content, userId: userId})
+    })
+    .then(() => {
+      res.redirect("/");
+    })
+
+})
+
+
+
+
+
 
 app.listen(3000);
