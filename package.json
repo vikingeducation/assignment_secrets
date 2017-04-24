@@ -1,0 +1,26 @@
+{
+  "name": "assignment_secrets",
+  "version": "1.0.0",
+  "description": "Build a web app that allows users to store and share their darkest secrets.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/William-Charles/assignment_secrets.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/William-Charles/assignment_secrets/issues"
+  },
+  "homepage": "https://github.com/William-Charles/assignment_secrets#readme",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.2",
+    "mongoose": "^4.9.6"
+  }
+}
