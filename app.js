@@ -6,6 +6,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
+
 var cookieSession = require("cookie-session");
 app.use(
   cookieSession({
@@ -14,6 +15,11 @@ app.use(
   })
 );
 
+// ----------------------------------------
+// Flash Messages
+// ----------------------------------------
+var flash = require('express-flash-messages');
+app.use(flash());
 
 app.use((req, res, next) => {
   res.locals.session = req.session;
@@ -96,15 +102,17 @@ app.use("/", sessionRouter);
 var indexRouter = require("./routes/index");
 app.use("/", indexRouter);
 
+// Handlebars
+const helpers = require("./helpers");
 var expressHandlebars = require("express-handlebars");
-
 var hbs = expressHandlebars.create({
   partialsDir: "views/",
-  defaultLayout: "main"
+  defaultLayout: "main",
+  helpers: helpers.registered
 });
-
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
+// End Handlebars
 
 var port = process.env.PORT || process.argv[2] || 3000;
 var host = "localhost";
