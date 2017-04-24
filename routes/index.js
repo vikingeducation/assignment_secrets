@@ -6,6 +6,8 @@ var models = require("./../models");
 var User = mongoose.model("User");
 var Secret = mongoose.model("Secret");
 
+var Cypher = require('../lib/Cipher');
+
 var {
   createSignedSessionId,
   loginMiddleware,
@@ -34,15 +36,22 @@ router.get("/", loggedInOnly, (req, res) => {
 
 router.post("/secret", loggedInOnly, (req, res) => {
   let secret = req.body.secret;
+  let key = req.body.cipherKey;
+  if(key){
+    let encrypted = Cipher.encrypt(secret, key);
+  } else {
+
+  }
   Secret.create({
     author: req.user._id,
     body: secret,
     viewers: [req.user._id]
   })
-    .then(secret => {
-      res.redirect(h.indexPath());
-    })
-    .catch(e => res.status(500).send(e.stack));
+  .then(secret => {
+    res.redirect(h.indexPath());
+  })
+  .catch(e => res.status(500).send(e.stack));
+
 });
 
 router.get("/secrets", loggedInOnly, (req, res) => {
