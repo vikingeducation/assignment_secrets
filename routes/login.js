@@ -4,25 +4,42 @@ const models = require('./../models');
 const User = models.User;
 const h = require('./../helpers').registered;
 
-// Login routes
+
 router.get("/", h.loggedOutOnly, (req, res) => {
-  res.render("login");
+  res.render("login/index");
 });
 
 router.post("/", (req, res) => {
   const { email, password } = req.body;
-  User.findOne({ email }, (err, user) => {
-    if (!user) return res.send("NO USER");
+  User.findOne({ email })
+    .then(user => {
+      if (!user) {
+        req.flash('error', "Error: User could not be found. Please try again or register a new account.");
+        res.redirect("/");
+      }
 
-    if (user.validatePassword(password)) {
-      const sessionId = h.createSignedSessionId(email);
-      res.session.id = sessionId;
-      // res.cookie("sessionId", sessionId);
-      res.redirect("/");
-    } else {
-      res.send("UNCOOL");
-    }
-  });
+      if (user.validatePassword(password)) {
+        const sessionId = h.createSignedSessionId(email);
+        req.session.id = sessionId;
+        res.redirect("/");
+      } else {
+        req.flash('error', "Error: Password incorrect. Please try again.");
+        res.redirect("/");
+      }
+    })
+    .catch(e => {
+      if (e.errors) {
+        let errors = Object.keys(e.errors);
+
+        errors.forEach(error => {
+          req.flash('error', e.errors[error].message);
+          console.log(e.errors[error].message);
+        });
+        res.redirect('back');
+      } else {
+        res.status(500).send(e.stack);
+      }
+    });
 });
 
 module.exports = router;

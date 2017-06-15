@@ -108,14 +108,16 @@ app.set('view engine', 'handlebars');
 const login = require('./routes/login');
 const logout = require('./routes/logout');
 const register = require('./routes/register');
+const secrets = require('./routes/secrets');
 
 app.use(h.loginMiddleware);
 app.get("/", h.loggedInOnly, (req, res) => {
-  res.render("home");
+  res.redirect('secrets');
 });
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/register', register);
+app.use('/secrets', secrets);
 
 // ----------------------------------------
 // Server

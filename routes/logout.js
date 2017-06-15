@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-// Logout route
 router.get("/", (req, res) => {
-  // res.cookie("sessionId", "");
-  res.session.id = "";
+  req.session.id = "";
+  req.session.user = "";
   res.redirect("/");
 });
 

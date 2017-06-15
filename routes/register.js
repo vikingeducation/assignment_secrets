@@ -4,22 +4,33 @@ const models = require('./../models');
 const User = models.User;
 const h = require('./../helpers').registered;
 
-// Registration Routes
 router.get("/", h.loggedOutOnly, (req, res) => {
-  res.render("register");
+  res.render("register/index");
 });
 
 router.post("/", (req, res) => {
   const { email, password } = req.body;
   const newUser = new User({ email, password });
-  newUser.save((err, user) => {
-    if (err) return res.send("ERROR");
+  newUser.save()
+    .then(user => {
+      const sessionId = h.createSignedSessionId(email);
+      req.session.id = sessionId;
+      req.flash('success', "Welcome back");
+      res.redirect("/");
+    })
+    .catch(e => {
+      if (e.errors) {
+        let errors = Object.keys(e.errors);
 
-    const sessionId = h.createSignedSessionId(email);
-    res.session.id = sessionId;
-    // res.cookie("sessionId", sessionId);
-    res.redirect("/");
-  });
+        errors.forEach(error => {
+          req.flash('error', e.errors[error].message);
+          console.log(e.errors[error].message);
+        });
+        res.redirect('back');
+      } else {
+        res.status(500).send(e.stack);
+      }
+    });
 });
 
 module.exports = router;
