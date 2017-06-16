@@ -11,16 +11,14 @@ const createSignedSessionId = email => {
 const generateSignature = email => md5(email + secret);
 
 const loggedInOnly = (req, res, next) => {
-  // if (req.user) {
   if (req.session.user) {
     next();
   } else {
-    res.redirect("login");
+    res.redirect("/login");
   }
 };
 
 const loggedOutOnly = (req, res, next) => {
-  // if (!req.user) {
   if (!req.session.user) {
     next();
   } else {
@@ -29,7 +27,6 @@ const loggedOutOnly = (req, res, next) => {
 };
 
 const loginMiddleware = (req, res, next) => {
-  // const sessionId = req.cookies.sessionId;
   const sessionId = req.session.id;
   if (!sessionId) return next();
 
@@ -37,15 +34,14 @@ const loginMiddleware = (req, res, next) => {
 
   User.findOne({ email }, (err, user) => {
     if (signature === generateSignature(email)) {
-      // req.user = user;
       req.session.user = user;
       res.locals.currentUser = user;
       next();
     } else {
-      res.send("You've tampered with your session!");
-      // clear out session here?
-      // redirect to login
-      // flash message plz
+      req.session.id = "";
+      req.session.user = "";
+      req.flash('error', 'Session was invalidated. Please login');
+      res.redirect("/login");
     }
   });
 };

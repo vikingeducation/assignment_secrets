@@ -109,6 +109,7 @@ const login = require('./routes/login');
 const logout = require('./routes/logout');
 const register = require('./routes/register');
 const secrets = require('./routes/secrets');
+const requests = require('./routes/requests');
 
 app.use(h.loginMiddleware);
 app.get("/", h.loggedInOnly, (req, res) => {
@@ -118,6 +119,7 @@ app.use('/login', login);
 app.use('/logout', logout);
 app.use('/register', register);
 app.use('/secrets', secrets);
+app.use('/requests', requests);
 
 // ----------------------------------------
 // Server

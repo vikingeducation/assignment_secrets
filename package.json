@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "c": "node repl.js"
+    "c": "node repl.js",
+    "clean": "node seeds"
   },
   "repository": {
     "type": "git",

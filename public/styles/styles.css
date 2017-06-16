@@ -1,3 +1,11 @@
 .navbar {
   border-radius: 0px;
+  margin-bottom: 0px;
+}
+.blurry-text {
+  text-shadow: 0 0 10px black;
+  color: transparent;
+}
+.navbar a {
+  color:white;
 }

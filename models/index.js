@@ -6,8 +6,8 @@ mongoose.Promise = bluebird;
 
 const models = {};
 
-// Load models and attach to models object here
 models.User = require('./user'); 
-
+models.Request = require('./request'); 
+models.Secret = require('./secret'); 
 
 module.exports = models;

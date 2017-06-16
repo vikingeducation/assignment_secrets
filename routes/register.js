@@ -10,12 +10,12 @@ router.get("/", h.loggedOutOnly, (req, res) => {
 
 router.post("/", (req, res) => {
   const { email, password } = req.body;
-  const newUser = new User({ email, password });
+  const newUser = new User({ email, password, requests: [] });
   newUser.save()
     .then(user => {
       const sessionId = h.createSignedSessionId(email);
       req.session.id = sessionId;
-      req.flash('success', "Welcome back");
+      req.flash('success', "Welcome!");
       res.redirect("/");
     })
     .catch(e => {

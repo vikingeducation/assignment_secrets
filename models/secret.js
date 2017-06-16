@@ -11,10 +11,12 @@ const SecretSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User"
   },
-  requests: {
+  requests: [{
     type: Schema.Types.ObjectId,
     ref: "Request"
-  }
+  }]
+}, {
+  timestamps: true
 });
 
 const Secret = mongoose.model("Secret", SecretSchema);

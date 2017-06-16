@@ -21,6 +21,7 @@ router.post("/", (req, res) => {
       if (user.validatePassword(password)) {
         const sessionId = h.createSignedSessionId(email);
         req.session.id = sessionId;
+        req.flash('success', 'Welcome back.');
         res.redirect("/");
       } else {
         req.flash('error', "Error: Password incorrect. Please try again.");
