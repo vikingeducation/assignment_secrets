@@ -25,8 +25,19 @@ router.get('/', (req, res) => {
       }).populate('owner')
     })
     .then(results => {
-      console.log(results);
       res.render("secrets/index", { secrets: allSecrets, sharedSecrets: results });
+    })
+    .catch(e => {
+      if (e.errors) {
+        let errors = Object.keys(e.errors);
+
+        errors.forEach(error => {
+          req.flash('error', e.errors[error].message);
+        });
+        res.redirect('back');
+      } else {
+        res.status(500).send(e.stack);
+      }
     });
 });
 
@@ -63,6 +74,18 @@ router.get('/all', (req,res) => {
     .sort({createdAt: 'desc'})
     .then(secrets => {
       res.render('secrets/all', { secrets });
+    })
+    .catch(e => {
+      if (e.errors) {
+        let errors = Object.keys(e.errors);
+
+        errors.forEach(error => {
+          req.flash('error', e.errors[error].message);
+        });
+        res.redirect('back');
+      } else {
+        res.status(500).send(e.stack);
+      }
     });
 });
 

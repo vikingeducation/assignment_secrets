@@ -34,7 +34,6 @@ router.post("/", (req, res) => {
 
         errors.forEach(error => {
           req.flash('error', e.errors[error].message);
-          console.log(e.errors[error].message);
         });
         res.redirect('back');
       } else {

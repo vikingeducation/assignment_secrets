@@ -29,6 +29,18 @@ router.get('/:id/accept', (req, res) => {
     .then(() => {
       req.flash('success', 'Follow request successfully accepted!');
       res.redirect('back');
+    })
+    .catch(e => {
+      if (e.errors) {
+        let errors = Object.keys(e.errors);
+
+        errors.forEach(error => {
+          req.flash('error', e.errors[error].message);
+        });
+        res.redirect('back');
+      } else {
+        res.status(500).send(e.stack);
+      }
     });
 });
 
@@ -52,6 +64,18 @@ router.get('/:id/reject', (req, res) => {
     .then(() => {
       req.flash('success', 'Follow request successfully rejected.');
       res.redirect('back');
+    })
+    .catch(e => {
+      if (e.errors) {
+        let errors = Object.keys(e.errors);
+
+        errors.forEach(error => {
+          req.flash('error', e.errors[error].message);
+        });
+        res.redirect('back');
+      } else {
+        res.status(500).send(e.stack);
+      }
     });
 });
 
@@ -92,8 +116,20 @@ router.post('/:id', (req, res, next) => {
     .then(results => {
       req.flash('success', 'User has received your follow request.');
       next();
+    })
+    .catch(e => {
+      if (e.errors) {
+        let errors = Object.keys(e.errors);
+
+        errors.forEach(error => {
+          req.flash('error', e.errors[error].message);
+        });
+        res.redirect('back');
+      } else {
+        res.status(500).send(e.stack);
+      }
     });
-}, (req, res) => {
+  }, (req, res) => {
   res.redirect('back');
 });
 
