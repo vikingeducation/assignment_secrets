@@ -1,21 +1,13 @@
-# assignment_secrets
-Build a web app that allows users to store and share their darkest secrets.
+# Secrets - Session Authentication
 
+## Introduction
+This is a simple application that demonstrates session-based authentication in Node/Express.
 
-To do:
+## Technologies Used
+Node, Express, MongoDB, Session Authentication
 
-in /request (post) you create a new request
-  -first find and if nothing, then baddabing badda boom ya can make it
-  -otherwise just redirect
-in /request (put) you confirm a request
-  -first check that the user matches requestee
-  -then delete request
-  -add requester to follows of secret
+## Getting Started
+Clone the repository and install depencies. Run the application with `npm start`. Try creating different users. Try creating some "secrets." Then, request to view a secret from another user. On the original user, you will have the option to accept or reject the view request.
 
-
-todo:
-first, wire up buttons to send requests
-create them with a simple post route
-then, we want to wire up "your secrets" to show current requests, with a button to accept or reject
-finally, show 'followed secrets" in "your secrets"
-done with project!
+## Deployment Link
+A deployed version of this project may be found [here.](https://stark-atoll-90818.herokuapp.com/login)
