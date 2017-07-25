@@ -5,6 +5,7 @@
 .blurry-text {
   text-shadow: 0 0 10px black;
   color: transparent;
+  user-select: none;
 }
 .navbar a {
   color:white;

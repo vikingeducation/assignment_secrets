@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "c": "node repl.js",
-    "clean": "node seeds"
+    "clean": "node seeds",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",

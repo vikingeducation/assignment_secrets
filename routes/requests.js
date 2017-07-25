@@ -14,13 +14,13 @@ router.get('/:id/accept', (req, res) => {
     .then(results => {
       request = results;
       return Secret.findByIdAndUpdate(request.secret, {
-        $push: {followers: request.requester},
-        $pull: {requests: request._id}
+        $push: { followers: request.requester },
+        $pull: { requests: request._id }
       });
     })
     .then(() => {
       return User.findByIdAndUpdate(request.requester, {
-        $pull: {requests: request._id}
+        $pull: { requests: request._id }
       });
     })
     .then(() => {
@@ -50,12 +50,12 @@ router.get('/:id/reject', (req, res) => {
     .then(results => {
       request = results;
       return Secret.findByIdAndUpdate(request.secret, {
-        $pull: {requests: request._id}
+        $pull: { requests: request._id }
       });
     })
     .then(() => {
       return User.findByIdAndUpdate(request.requester, {
-        $pull: {requests: request._id}
+        $pull: { requests: request._id }
       });
     })
     .then(() => {
@@ -101,7 +101,7 @@ router.post('/:id', (req, res, next) => {
       if (results) {
         request = results;
         return Secret.findByIdAndUpdate(req.params.id, {
-          $push: {requests: request}
+          $push: { requests: request }
         });
       }
     })
@@ -109,7 +109,7 @@ router.post('/:id', (req, res, next) => {
       // then add request to the user
       if (results) {
         return User.findByIdAndUpdate(req.session.user._id, {
-          $push: {requests: request}
+          $push: { requests: request }
         });
       }
     })
@@ -129,7 +129,7 @@ router.post('/:id', (req, res, next) => {
         res.status(500).send(e.stack);
       }
     });
-  }, (req, res) => {
+}, (req, res) => {
   res.redirect('back');
 });
 

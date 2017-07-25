@@ -6,5 +6,5 @@ module.exports = () => {
   const envUrl = process.env[config.use_env_variable];
   const localUrl = `mongodb://${ config.host }/${ config.database }`;
   const mongoUrl =  envUrl ? envUrl : localUrl;
-  return mongoose.connect(mongoUrl);
+  return mongoose.connect(mongoUrl, { useMongoClient: true });
 };
