@@ -5,32 +5,51 @@ const RequestPermission = require("../models").RequestPermission;
 const { loggedInOnly } = require("../services/session");
 
 router.get("/", loggedInOnly, async (req, res) => {
-  //get all the secrets
-  let user = req.user;
-  let secrets = await Secret.findAll(
-    {
-      where: { authorid: user.id }
-    },
-    {
-      include: [{ model: RequestPermission }]
-    }
-  );
-  console.log(`secrets = `, secrets);
-  return res.render("index", { secrets });
+	//get all the secrets
+	let user = req.user;
+	let pendingSecrets = {};
+	let secrets = await Secret.findAll({
+		where: { authorid: user.id }
+	});
+
+	let result = await RequestPermission.findAll({
+		where: { secretId: secrets[0].id }
+	});
+
+	// secrets.forEach((secret, i) => {
+	// 	RequestPermission.findAll({
+	// 		where: { secretId: secret.id }
+	// 	}).then(requests => {
+	// 		pendingSecrets[i] = requests;
+	// 	});
+	// });
+
+	// console.log(pendingSecrets, "??");
+
+	return res.render("index", { secrets });
 });
 
-router.post("/secret", loggedInOnly, async (req, res) => {
-  let user = req.user;
-  console.log(req.body);
+router.get("/secrets", loggedInOnly, async (req, res) => {
+	try {
+		let secrets = await Secret.findAll({
+			where: { $ne: { authorid: req.user.id } }
+		});
 
-  let secret = await Secret.create({
-    secret: req.body.secret,
-    authorid: user.id
-  });
+		res.render("secrets", { secrets });
+	} catch (e) {
+		console.error(e.stack);
+	}
+});
 
-  // console.log(secret, "new secret");
+router.post("/secrets", loggedInOnly, async (req, res) => {
+	let user = req.user;
 
-  res.redirect("/");
+	let secret = await Secret.create({
+		secret: req.body.secret,
+		authorid: user.id
+	});
+
+	res.redirect("/");
 });
 
 module.exports = router;

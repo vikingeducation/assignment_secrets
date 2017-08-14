@@ -1,6 +1,6 @@
 <h1>SECRET PAGE</h1>
 
-<form action="/secret" method="POST">
+<form action="/secrets" method="POST">
   <div class="form-group">
     <label for="secret">Tell me a secret:</label>
     <input type="text" class="form-control" name="secret" id="secret">
@@ -14,7 +14,7 @@
   <ul>
   {{#each secrets as |secret|}}
     <li>{{secret.secret}}</li>
-    <li>{{secret.RequestPermission.pending}}</li>
+{{!--     <li>{{secret.RequestPermission.pending}}</li> --}}
     <br>
   {{/each}}
   </ul>
