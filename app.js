@@ -13,12 +13,10 @@ const hbs = expressHandlebars.create({
   defaultLayout: "application"
 });
 const mongoose = require("mongoose");
-const { verifySession } = require("./services/session");
+const { verifySession, loggedInOnly } = require("./services/session");
 
 const login = require("./routes/login");
-
-app.engine("handlebars", hbs.engine);
-app.set("view engine", "handlebars");
+const secrets = require("./routes/secrets");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -44,16 +42,16 @@ app.use((req, res, next) => {
 
 app.use(verifySession);
 
+app.engine("handlebars", hbs.engine);
+app.set("view engine", "handlebars");
+
 //routes here
 
 app.use("/login", login);
+app.use("/secrets", secrets);
 
-app.get("/", (req, res) => {
-  if (req.user) {
-    res.send("You logged in! :D");
-  } else {
-    res.redirect("/login");
-  }
+app.get("/", loggedInOnly, (req, res) => {
+  res.redirect("/secrets");
 });
 
 const port = process.env.PORT || process.argv[2] || 3000;
