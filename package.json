@@ -1,0 +1,32 @@
+{
+  "name": "assignment_secrets",
+  "version": "1.0.0",
+  "description": "Name: Eric & Benny",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "sequelize db:migrate:undo:all && db:migrate && db:seed:all",
+    "sql:migrate:undo": "sequelize db:migrate:undo:all",
+    "start": "which nodemon > /dev/null && nodemon app.js || node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricGlover/assignment_secrets.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EricGlover/assignment_secrets/issues"
+  },
+  "homepage": "https://github.com/EricGlover/assignment_secrets#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.4",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.15.5",
+    "pg": "^7.1.2",
+    "sequelize": "^4.4.10",
+    "sequelize-cli": "^2.8.0"
+  }
+}
