@@ -1,0 +1,13 @@
+schema.txt
+  require: cookie-parser, mongoose, unique-validator, bcrypt
+
+Users:
+  username: 
+  passwordHash: hashed via virtual
+
+
+Secret Schema:
+  body: 
+  owner: 
+  requestedViewers: [userIds]
+  approvedViewers: [userIds] (not in requestedViewers)
