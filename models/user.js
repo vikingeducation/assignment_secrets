@@ -1,6 +1,6 @@
+"use strict";
 const bcrypt = require("bcrypt");
 
-("use strict");
 module.exports = function(sequelize, DataTypes) {
   class User extends sequelize.Model {
     static associate(models) {
@@ -8,8 +8,8 @@ module.exports = function(sequelize, DataTypes) {
         foreignKey: "userId"
       });
     }
-    comparePassword(presumedPassword) {
-      return bcrypt.compareSync(presumedPassword, this.password);
+    comparePassword(password) {
+      return bcrypt.compareSync(password, this.password);
     }
   }
 
