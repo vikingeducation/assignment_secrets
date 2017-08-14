@@ -5,7 +5,11 @@ const { loggedInOnly } = require("../services/Session");
 
 router.get("/", loggedInOnly, async (req, res) => {
   try {
-    const authored = await Secret.find({ author: req.user._id });
+    const authored = await Secret.find({ author: req.user._id }).populate({
+      path: "requests",
+      populate: { path: "author" }
+    });
+    console.log(authored);
     res.render("secrets/index", { authored });
   } catch (e) {
     res.status(500).end(e.stack);
