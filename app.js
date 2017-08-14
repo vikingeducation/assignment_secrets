@@ -67,7 +67,7 @@ app.use("/secrets", require("./routers/secrets"));
 app.all("/", (req, res) => res.redirect("/secrets"));
 // Set up port/host
 const port = process.env.PORT || process.argv[2] || 3000;
-const host = "localhost";
+const host = "0.0.0.0";
 let args = process.env.NODE_ENV === "production" ? [port] : [port, host];
 
 // helpful log when the server starts
