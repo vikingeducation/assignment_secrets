@@ -14,6 +14,8 @@ const hbs = expressHandlebars.create({
 });
 const mongoose = require("mongoose");
 
+const login = require("./routes/login");
+
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 
@@ -40,8 +42,11 @@ app.use((req, res, next) => {
 });
 
 //routes here
+
+app.use("/login", login);
+
 app.get("/", (req, res) => {
-  res.send("yay");
+  res.send("You logged in! :D")
 });
 
 const port = process.env.PORT || process.argv[2] || 3000;

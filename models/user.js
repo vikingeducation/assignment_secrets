@@ -9,6 +9,7 @@ const UserSchema = new Schema(
     secrets: [
       {
         author: Boolean,
+        accessGranted: Boolean,
         secret: {
           type: Schema.Types.ObjectId,
           ref: "Secret"
@@ -22,7 +23,7 @@ const UserSchema = new Schema(
 );
 
 UserSchema.virtual("password").set(function(password) {
-  this.passwordHash = bcrypt.hash(password, 12);
+  this.passwordHash = bcrypt.hashSync(password, 12);
 });
 
 const User = mongoose.model("User", UserSchema);
