@@ -2,14 +2,16 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const { User, Secret } = require("./../models");
-const { beginSession } = require("../services/session");
+const { beginSession, verifySession } = require("../services/session");
 
 router.get("/", (req, res) => {
-  res.render("login");
+	if (req.user) {
+		return res.redirect("/")
+	} else {
+		res.render("login");
+	}
 });
 
-router.post("/", (req, res) => {
-  beginSession();
-});
+router.post("/", beginSession);
 
 module.exports = router;

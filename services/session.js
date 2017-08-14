@@ -1,12 +1,13 @@
 const bcrypt = require("bcrypt");
 const { User, Secret } = require("./../models");
 
-beginSession = (req, res, next) => {
+beginSession = (req, res) => {
   User.find({ username: req.body.username }).then(user => {
-    if (bcrypt.compare(req.body.password, user[0].passwordHash)) {
+    if (bcrypt.compareSync(req.body.password, user[0].passwordHash)) {
+      console.log("I made it in here!!!");
       res.cookie(
         "sessionId",
-        user.username + ":" + bcrypt.hashSync(user[0].username, 12)
+        user[0].username + ":" + bcrypt.hashSync(user[0].username, 12)
       );
       return res.redirect("/");
     } else {
@@ -17,13 +18,19 @@ beginSession = (req, res, next) => {
 
 verifySession = (req, res, next) => {
   if (req.cookies.sessionId) {
-    User.find({ username: req.cookies.sessionId.split(":")[0] }).then(user => {
+    console.log(req.cookies.sessionId);
+    const [username, signature] = req.cookies.sessionId.split(":");
+    User.find({ username: username}).then(user => {
+      console.log(user);
       if (
         bcrypt.compare(
-          req.cookies.sessionId.split(":")[1],
+          signature,
           bcrypt.hashSync(user[0].username, 12)
         )
       ) {
+        console.log("Session matched!")
+        req.user = user;
+        res.locals.currentUser = user;
         next();
       } else {
         res.cookie("sessionId", "", { expires: new Date() });
@@ -31,7 +38,7 @@ verifySession = (req, res, next) => {
       }
     });
   } else {
-    return res.render("login");
+    return next();
   }
 };
 

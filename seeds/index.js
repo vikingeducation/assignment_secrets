@@ -10,7 +10,7 @@ const seeds = () => {
   for (let i = 0; i < 10; i++) {
     let newUser = new User({
       username: `user${i}`,
-      passwordHash: `password${i}`
+      password: `password${i}`
     });
 
     users.push(newUser);

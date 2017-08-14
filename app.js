@@ -49,7 +49,11 @@ app.use(verifySession);
 app.use("/login", login);
 
 app.get("/", (req, res) => {
-  res.send("You logged in! :D");
+  if (req.user) {
+    res.send("You logged in! :D");
+  } else {
+    res.redirect("/login");
+  }
 });
 
 const port = process.env.PORT || process.argv[2] || 3000;
