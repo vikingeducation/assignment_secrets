@@ -16,4 +16,31 @@ router.post("/", loggedInOnly, async (req, res) => {
   res.redirect(h.secretsPath());
 });
 
+router.get("/all", async (req, res) => {
+  let secrets = await Secret.find();
+  const shared = req.user.sharedSecrets.map( secret=> secret._id)
+  secrets = secrets.map( secret => {
+    if (shared.includes(secret.id){
+      return {
+        id: secret._id,
+        body: secret.body
+      }
+    } else {
+      if (secret.requests.includes(req.user._id) {
+        return {
+          id: secret._id,
+          body: null,
+          requested: true
+        }
+      } else {
+        return {
+          id: secret._id,
+          body: null,
+          requested: false
+        }
+      }
+    }
+  })
+});
+
 module.exports = router;
