@@ -2,7 +2,7 @@
 module.exports = function(sequelize, DataTypes) {
   class Secret extends sequelize.Model {
     static associate(models) {
-      Secret.hasMany(models.User, {
+      Secret.hasMany(models.RequestPermission, {
         foreignKey: "userId"
       });
       Secret.belongsToMany(models.User, {

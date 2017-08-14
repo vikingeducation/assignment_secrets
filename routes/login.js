@@ -3,7 +3,7 @@ const User = require("../models").User;
 const { createSignedSessionId, loggedOutOnly } = require("../services/session");
 
 router.get("/", loggedOutOnly, (req, res) => {
-	return res.send("LOGIN!");
+	return res.render("login");
 });
 
 router.post("/", async (req, res) => {

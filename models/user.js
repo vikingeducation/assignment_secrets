@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 module.exports = function(sequelize, DataTypes) {
   class User extends sequelize.Model {
     static associate(models) {
-      User.hasMany(models.Secret, {
+      User.hasMany(models.RequestPermission, {
         foreignKey: "secretId"
       });
       User.belongsToMany(models.Secret, {
