@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Secret } = require("../models");
+const { Secret, User } = require("../models");
 const h = require("../helpers");
 const { loggedInOnly } = require("../services/Session");
 
@@ -10,7 +10,6 @@ router.get("/", loggedInOnly, async (req, res) => {
       model: "User",
       populate: { path: "author" }
     });
-    console.log(authored);
     res.render("secrets/index", { authored });
   } catch (e) {
     res.status(500).end(e.stack);
@@ -78,17 +77,27 @@ router.get("/:id", loggedInOnly, async (req, res) => {
 
 router.get("/:secret/:user", loggedInOnly, async (req, res) => {
   try {
-    let updatedSecret = await Secret.findById(req.params.secret).populate(
-      "author"
+    await Secret.update(
+      { _id: req.params.secret },
+      { $pull: { requests: req.params.user } }
     );
-    User.update(
-      {
-        _id: req.params.user._id
-      },
-      {
-        $push: { sharedSecrets: updatedSecret.author._id }
-      }
+    await User.update(
+      { _id: req.params.user },
+      { $push: { sharedSecrets: req.params.secret } }
     );
+    res.redirect("back");
+
+    // let updatedSecret = await Secret.findById(req.params.secret).populate(
+    //   "author"
+    // );
+    // User.update(
+    //   {
+    //     _id: req.params.user._id
+    //   },
+    //   {
+    //     $push: { sharedSecrets: updatedSecret.author._id }
+    //   }
+    // );
   } catch (e) {
     res.status(500).end(e.stack);
   }
