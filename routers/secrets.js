@@ -17,30 +17,27 @@ router.post("/", loggedInOnly, async (req, res) => {
 });
 
 router.get("/all", async (req, res) => {
-  let secrets = await Secret.find();
-  const shared = req.user.sharedSecrets.map( secret=> secret._id)
-  secrets = secrets.map( secret => {
-    if (shared.includes(secret.id){
-      return {
-        id: secret._id,
-        body: secret.body
-      }
-    } else {
-      if (secret.requests.includes(req.user._id) {
-        return {
-          id: secret._id,
-          body: null,
-          requested: true
-        }
-      } else {
-        return {
-          id: secret._id,
-          body: null,
-          requested: false
-        }
-      }
+  const shared = req.user.sharedSecrets.map(secret => secret._id);
+
+  let secrets = await Secret.find().populate("author");
+  secrets = secrets.map(secret => {
+    let mappedSecret = {
+      id: secret._id,
+      author: secret.author,
+      body: null,
+      requested: false
+    };
+    if (shared.includes(secret.id)) {
+      mappedSecret.body = secret.body;
+    } else if (secret.requests.includes(req.user._id)) {
+      mappedSecret.requested = true;
     }
-  })
+    return mappedSecret;
+  });
+
+  // console.log(secrets);
+
+  res.render("secrets/all", { secrets });
 });
 
 module.exports = router;
