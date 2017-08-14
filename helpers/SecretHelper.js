@@ -4,5 +4,6 @@ module.exports = {
   secretPath: id => `/secrets/${id}`,
   newSecretPath: () => "/secrets", // post
   editSecretPath: id => `/secrets/${id}`, // put/patch
-  destroySecretPath: id => `/secrets/${id}?_method=delete`
+  destroySecretPath: id => `/secrets/${id}?_method=delete`,
+  allowSecretPath: (secret, user) => `/secrets/${secret}/${user}`
 };

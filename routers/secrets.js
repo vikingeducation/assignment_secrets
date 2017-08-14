@@ -7,6 +7,7 @@ router.get("/", loggedInOnly, async (req, res) => {
   try {
     const authored = await Secret.find({ author: req.user._id }).populate({
       path: "requests",
+      model: "User",
       populate: { path: "author" }
     });
     console.log(authored);
@@ -70,6 +71,24 @@ router.get("/:id", loggedInOnly, async (req, res) => {
       { $push: { requests: req.user._id } }
     );
     res.redirect("back");
+  } catch (e) {
+    res.status(500).end(e.stack);
+  }
+});
+
+router.get("/:secret/:user", loggedInOnly, async (req, res) => {
+  try {
+    let updatedSecret = await Secret.findById(req.params.secret).populate(
+      "author"
+    );
+    User.update(
+      {
+        _id: req.params.user._id
+      },
+      {
+        $push: { sharedSecrets: updatedSecret.author._id }
+      }
+    );
   } catch (e) {
     res.status(500).end(e.stack);
   }
