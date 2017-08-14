@@ -6,19 +6,17 @@ connect().then(seed);
 async function seed(db) {
 	console.log('Creating Users');
 
-	console.log('Creating Secrets');
-	const secrets = [];
-	for (let i = 1; i < 5; i++) {
-		var secret = await Secret.create({
-			owner: i % 3,
-			encryption: i,
-			body: `This is a post! ${i}`
-		});
-		secrets.push(secret);
-		console.log('saving secret');
-	}
-
 	for (let i = 1; i < 3; i++) {
+		const secrets = [];
+		for (let i = 1; i < 5; i++) {
+			var secret = await Secret.create({
+				encryption: i,
+				body: `This is a post! ${i}`
+			});
+			secrets.push(secret);
+			console.log('saving secret');
+		}
+
 		var user = await User.create({
 			username: `user${i}`,
 			email: `email${i}@gmail.com`,
