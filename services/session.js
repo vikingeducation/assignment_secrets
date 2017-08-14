@@ -26,11 +26,7 @@ const loggedOutOnly = (req, res, next) => {
 };
 
 const loginMiddleware = async (req, res, next) => {
-  let sessionId;
-
-  if (req.cookies) {
-    sessionId = req.cookies.sessionId;
-  }
+  const sessionId = req.session.sessionId;
 
   if (!sessionId) return next();
 
