@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 mongoose.Promise = require("bluebird");
 
-module.exports({
-  users: require("./users"),
-  secrets: require("./secrets")
-});
+module.exports = {
+  User: require("./User"),
+  Secret: require("./Secret")
+};

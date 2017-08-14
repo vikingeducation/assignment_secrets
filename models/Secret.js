@@ -6,6 +6,6 @@ const SecretSchema = mongoose.Schema({
   requests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
 });
 
-const User = mongoose.model("Secret", SecretSchema);
+const Secret = mongoose.model("Secret", SecretSchema);
 
-module.exports = User;
+module.exports = Secret;
