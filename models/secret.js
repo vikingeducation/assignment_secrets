@@ -14,19 +14,12 @@ const SecretSchema = new Schema(
         ref: "User"
       }
     ]
-    // orderItems: [
-    // 	{
-    // 		type: Schema.Types.ObjectId,
-    // 		ref: "OrderItem"
-    // 	}
-    // ],
   },
   {
     timestamps: true
   }
 );
 
-// Create the model with a defined schema
 const Secret = mongoose.model("Secret", SecretSchema);
 
 module.exports = Secret;
