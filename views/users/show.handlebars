@@ -1,0 +1,9 @@
+<div class="page-header">
+	<h1>{{user.username}}'s secrets</h1>
+	<a href="/secrets/new" class="btn btn-primary">+ New Secret</a>
+</div>
+
+{{#each user.secrets as |secret|}}
+<div>{{secret.body}}</div>
+
+{{/each}}
