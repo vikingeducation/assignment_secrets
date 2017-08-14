@@ -5,14 +5,15 @@ const { loggedInOnly, createSignedSessionId } = require("../services/Session");
 
 /* GET users listing. */
 router.get("/", loggedInOnly, async function(req, res, next) {
-  let users = await User.find();
-  console.log(users);
-  res.render("users/index", { users: users });
+  res.render("secrets/new");
 });
-router.get("/:id", loggedInOnly, async function(req, res, next) {
-  let user = await User.findById(req.user._id);
-
-  res.render("users/show", { secrets: user.secrets });
+router.post("/", (req, res) => {
+  Secret.create({
+    owner: req.user._id,
+    body: req.body.secret_body,
+    encryption: [req.user._id]
+  }).then(() => {
+    return res.redirect("/users");
+  });
 });
-
 module.exports = router;

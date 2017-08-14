@@ -22,15 +22,6 @@
           <td>
             <a href="/users/{{ user.id }}">{{ user.username }}</a>
           </td>
-          <td>
-            <a href="/users/{{ user.id }}">{{ user.email }}</a>
-          </td>
-          <td>
-            <a href="/users/{{ user.id }}/edit">Edit</a>
-          </td>
-          <td>
-            <a href="/users/{{ user.id }}?_method=delete" class="text-danger">Delete</a>
-          </td>
         </tr>
       {{/each }}
     </tbody>
@@ -38,14 +29,3 @@
 {{else }}
   <p class="text-danger">No users</p>
 {{/if }}
-
-
-
-
-
-
-
-
-
-
-

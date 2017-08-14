@@ -1,18 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const SecretSchema = new Schema(
-	{
-		owner: Array,
-		encryption: Number,
-		body: String
-	},
-	{
-		timestamps: true
-	}
+  {
+    owner: String,
+    encryption: Array,
+    body: String
+  },
+  {
+    timestamps: true
+  }
 );
 
-const Secret = mongoose.model('Secret', SecretSchema);
-
+const Secret = mongoose.model("Secret", SecretSchema);
+Secret.schema = SecretSchema;
 module.exports = Secret;
