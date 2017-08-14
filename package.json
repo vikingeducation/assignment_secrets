@@ -1,23 +1,38 @@
 {
-	"name": "assignment-secrets",
-	"version": "0.0.0",
-	"private": true,
-	"scripts": {
-		"start": "nodemon ./bin/www"
-	},
-	"dependencies": {
-		"bcrypt": "^1.0.2",
-		"body-parser": "~1.17.1",
-		"cookie-parser": "~1.4.3",
-		"debug": "~2.6.3",
-		"dotenv": "^4.0.0",
-		"express": "~4.15.2",
-		"express-handlebars": "^3.0.0",
-		"express-session": "^1.15.5",
-		"md5": "^2.2.1",
-		"mongoose": "^4.11.7",
-		"mongorito": "^3.0.3",
-		"morgan": "~1.8.1",
-		"serve-favicon": "~2.4.2"
-	}
+  "name": "assignment-secrets",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.5.0",
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "dotenv": "^4.0.0",
+    "express": "~4.15.2",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.15.5",
+    "latest": "^0.2.0",
+    "md5": "^2.2.1",
+    "mongoose": "^4.11.7",
+    "mongorito": "^3.0.3",
+    "morgan": "~1.8.1",
+    "serve-favicon": "~2.4.2"
+  },
+  "description": "Build a web app that allows users to store and share their darkest secrets.",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KaraThrash/assignment_secrets.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KaraThrash/assignment_secrets/issues"
+  },
+  "homepage": "https://github.com/KaraThrash/assignment_secrets#readme"
 }
