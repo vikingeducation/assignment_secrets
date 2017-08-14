@@ -23,5 +23,5 @@ module.exports = {
 };
 
 function beforeCreate(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(12), null);
 }

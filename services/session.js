@@ -1,4 +1,3 @@
-// /services/Session.js
 const secret = process.env.SECRET || "puppies";
 const md5 = require("md5");
 const User = require("../models").User;

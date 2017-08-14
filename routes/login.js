@@ -8,19 +8,22 @@ router.get("/", loggedOutOnly, (req, res) => {
 
 router.post("/", async (req, res) => {
 	const { email, password } = req.body;
-	console.log("here?", User);
-	let user = await User.findOne({ where: { email: email } });
+	try {
+		let user = await User.findOne({ where: { email: email } });
 
-	if (!user) {
-		return res.send("NO USER :(!!!");
-	}
+		if (!user) {
+			return res.send("NO USER :(!!!");
+		}
 
-	if (user.comparePassword(password)) {
-		const sessionId = createSignedSessionId(email);
-		req.session["sessionId"] = sessionId;
-		res.redirect("/");
-	} else {
-		return res.send("SHAME!!!");
+		if (user.comparePassword(password)) {
+			const sessionId = createSignedSessionId(email);
+			req.session["sessionId"] = sessionId;
+			res.redirect("/");
+		} else {
+			return res.send("SHAME!!!");
+		}
+	} catch (e) {
+		console.error(e.stack);
 	}
 });
 
