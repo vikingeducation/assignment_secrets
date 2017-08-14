@@ -21,20 +21,12 @@ module.exports = function(sequelize, DataTypes) {
     },
     { sequelize }
   );
-  User.beforeCreate(function(user) {
-    user.password = cryptPassword(user.password);
-    user.save();
+
+  // hook
+  User.beforeCreate(async user => {
+    user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(8), null);
+    await user.save();
   });
+
   return User;
 };
-function cryptPassword(password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-}
-
-// function cryptPassword(password, callback) {
-//   bcrypt.genSalt(10, (err, salt) => {
-//     if (err) throw err;
-//     let hashThing = bcrypt.hashSync(password, salt);
-//     return hashThing;
-//   });
-// }
