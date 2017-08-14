@@ -9,7 +9,6 @@ const UserSchema = new Schema(
     secrets: [
       {
         author: Boolean,
-        accessGranted: Boolean,
         secret: {
           type: Schema.Types.ObjectId,
           ref: "Secret"

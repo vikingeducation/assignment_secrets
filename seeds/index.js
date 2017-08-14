@@ -21,13 +21,13 @@ const seeds = () => {
     let newSecret = new Secret({
       body: `I have ${i} cats!`,
       author: users[i % 10],
-      users: [users[(i + 1) % 10], users[(i + 2) % 10], users[(i + 3) % 10]]
+      users: [users[(i + 1) % 10], users[(i + 2) % 10]],
+      pendingUsers: [users[(i + 3) % 10]]
     });
     secrets.push(newSecret);
-    users[i % 10].secrets.push({ author: true, accessGranted: true, secret: newSecret });
-    users[(i + 1) % 10].secrets.push({ author: false, accessGranted: true, secret: newSecret });
-    users[(i + 2) % 10].secrets.push({ author: false, accessGranted: true, secret: newSecret });
-    users[(i + 3) % 10].secrets.push({ author: false, accessGranted: false, secret: newSecret });
+    users[i % 10].secrets.push({ author: true, secret: newSecret });
+    users[(i + 1) % 10].secrets.push({ author: false, secret: newSecret });
+    users[(i + 2) % 10].secrets.push({ author: false, secret: newSecret });
   }
 
   let promises = [];
