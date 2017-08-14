@@ -5,7 +5,12 @@ module.exports = function(sequelize, DataTypes) {
   class User extends sequelize.Model {
     static associate(models) {
       User.hasMany(models.Secret, {
-        foreignKey: "userId"
+        foreignKey: "secretId"
+      });
+      User.belongsToMany(models.Secret, {
+        through: models.RequestPermission,
+        as: "requestedUser",
+        foreignKey: "secretId"
       });
     }
     comparePassword(password) {
