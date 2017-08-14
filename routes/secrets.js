@@ -16,29 +16,28 @@ const {
 
 //home
 router.get("/", loggedInOnly, (req, res) => {
+
   return res.render("home");
 });
 
 // new secret from home page
 router.post("/new", (req, res) => {
-  const { username, password } = req.cookies.sessionId;
+  const [ username, signature ] = req.cookies.sessionId.split(":");
 
   User.findOne({ username }, (err, user) => {
-    if (!user) return res.send("NO USER");
+    console.log(user);
+    if (!user) {return res.send("NO USER")};
       return new Secret({
           body: req.body.body,
-          owner: user.id,
+          owner: user._id,
           requestedViewers: [],
-          approvedViewers: [user.id]
+          approvedViewers: [user._id]
       }).save()
-
-    } else {
-      return res.send("UNCOOL");
-    }
-  })
+    }) 
   .then((secret) => {
-    return res.redirect('home')
+    return res.redirect('/secrets')
   })
+  .catch(e => res.status(500).send(e.stack));
 });
 
 module.exports = router;

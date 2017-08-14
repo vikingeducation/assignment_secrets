@@ -38,6 +38,7 @@ app.use(loginMiddleware);
 
 app.get("/", loggedInOnly, (req, res) => {
   // render home page (landing with secrets)
+  console.log("line 41 was hit")
   res.render("home");
 });
 
