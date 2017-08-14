@@ -48,9 +48,13 @@ app.use((req, res, next) => {
   else require("./mongo")().then(() => next());
 });
 
-// Routes
-app.use("/users", require("./routers/users"));
+// Authentication Middleware
+app.use(require("./services/Session").guardian);
 
+// Routes
+app.use("/", require("./routers/auth"));
+app.use("/users", require("./routers/users"));
+app.all("/", (req, res) => res.redirect("/users"));
 // Set up port/host
 const port = process.env.PORT || process.argv[2] || 3000;
 const host = "localhost";

@@ -1,0 +1,44 @@
+const router = require("express").Router();
+const { User } = require("../models");
+const { createSignedSessionId, loggedOutOnly } = require("./services/Session");
+const h = require("../helpers");
+
+// Create session helper
+const createSession = (res, username) => {
+  const sessionId = createSignedSessionId(username);
+  res.cookie("sessionId", sessionId);
+  res.redirect("/");
+};
+
+// Login routes
+router.get("/login", loggedOutOnly, (req, res) => res.render("login"));
+
+router.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  User.findOne({ username })
+    .then(user => {
+      if (!user) res.send("No such user");
+      else if (user.validatePassword(password)) createSession(res, username);
+      else res.send("Bad password");
+    })
+    .catch(e => res.status(500).end(e.stack));
+});
+
+// Registration Routes
+router.get("/register", loggedOutOnly, (req, res) => res.render("register"));
+
+router.post("/register", (req, res) => {
+  const { username, password } = req.body;
+  User.create({ username, password })
+    .then(user => createSession(res, username))
+    .catch(e => res.status(500).end(e.stack));
+});
+
+// Logout route
+router.get("/logout", (req, res) => {
+  res.cookie("sessionId", "", { expires: new Date() });
+  res.redirect("/");
+});
+
+module.exports = router;
