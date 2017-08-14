@@ -1,4 +1,3 @@
-
 // secret or salt
 const SECRET = process.env["secret"] || "puppies";
 const md5 = require("md5");
@@ -16,7 +15,7 @@ const User = require("../models/User");
 const loginMiddleware = (req, res, next) => {
   const sessionId = req.cookies.sessionId;
 
-  // will redirect back to login page
+  // will presumably head back to login page
   if (!sessionId) return next();
 
   // pulling username off sessionId
@@ -25,7 +24,7 @@ const loginMiddleware = (req, res, next) => {
   // remake original signature and compare to session returned Id
   User.findOne({ username }, (err, user) => {
     if (signature === generateSignature(username)) {
-      req.user = user;
+      req.user = user; //
       res.locals.currentUser = user;
       return next();
     } else {
@@ -34,7 +33,7 @@ const loginMiddleware = (req, res, next) => {
   });
 };
 
-// only allow logged in users can't access 
+// logged out users only have access to login page
 const loggedInOnly = (req, res, next) => {
   if (req.user) {
     next();
@@ -43,7 +42,7 @@ const loggedInOnly = (req, res, next) => {
   }
 };
 
-// make sure loggedin users can't acces
+// middleware for login page make sure logged in users can't access
 const loggedOutOnly = (req, res, next) => {
   if (!req.user) {
     next();
@@ -51,4 +50,12 @@ const loggedOutOnly = (req, res, next) => {
     // might need to come back and modify
     res.redirect("/");
   }
+};
+
+
+module.exports = {
+  createSignedSessionId,
+  loginMiddleware,
+  loggedOutOnly,
+  loggedInOnly
 };

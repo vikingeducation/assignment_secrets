@@ -17,7 +17,6 @@ const SecretSchema = mongoose.Schema({
 });
 
 
-// 5
 const Secret = mongoose.model("Secret", SecretSchema);
 
 module.exports = Secret;

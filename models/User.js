@@ -14,7 +14,7 @@ UserSchema.plugin(uniqueValidator);
 // 3
 UserSchema.virtual("password")
   .set(function(value) {
-    this.passwordHash = bcrypt.hashSync(value, 8); // the 8 here is the "cost factor"
+    this.passwordHash = bcrypt.hashSync(value, 12); // the 12 here is the "cost factor"
   });
 
 // 4
