@@ -3,6 +3,8 @@ const { Secret, User } = require("../models");
 const h = require("../helpers");
 const { loggedInOnly } = require("../services/Session");
 
+// Display the current users secrets
+// and the secrets they have been given access to
 router.get("/", loggedInOnly, async (req, res) => {
   try {
     const authored = await Secret.find({ author: req.user._id }).populate({
@@ -16,6 +18,7 @@ router.get("/", loggedInOnly, async (req, res) => {
   }
 });
 
+// Create a new secret
 router.post("/", loggedInOnly, async (req, res) => {
   try {
     const body = req.body.secret;
@@ -27,6 +30,8 @@ router.post("/", loggedInOnly, async (req, res) => {
   }
 });
 
+// Display all of the secrets, making visible only our own
+// and those we have been given access to
 router.get("/all", loggedInOnly, async (req, res) => {
   try {
     const shared = req.user.sharedSecrets.map(secret => secret._id);
@@ -60,11 +65,9 @@ router.get("/all", loggedInOnly, async (req, res) => {
   }
 });
 
+// Add request access to a secret for the current user
 router.get("/:id", loggedInOnly, async (req, res) => {
   try {
-    // let secret = await Secret.findById(req.params.id);
-    // secret.requests.push(req.user._id);
-    // await secret.save();
     await Secret.update(
       { _id: req.params.id },
       { $push: { requests: req.user._id } }
@@ -75,6 +78,7 @@ router.get("/:id", loggedInOnly, async (req, res) => {
   }
 });
 
+// Grant a user access to a secret
 router.get("/:secret/:user", loggedInOnly, async (req, res) => {
   try {
     await Secret.update(
@@ -86,18 +90,6 @@ router.get("/:secret/:user", loggedInOnly, async (req, res) => {
       { $push: { sharedSecrets: req.params.secret } }
     );
     res.redirect("back");
-
-    // let updatedSecret = await Secret.findById(req.params.secret).populate(
-    //   "author"
-    // );
-    // User.update(
-    //   {
-    //     _id: req.params.user._id
-    //   },
-    //   {
-    //     $push: { sharedSecrets: updatedSecret.author._id }
-    //   }
-    // );
   } catch (e) {
     res.status(500).end(e.stack);
   }
