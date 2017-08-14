@@ -1,6 +1,6 @@
 // /services/Session.js
 const SECRET = process.env["secret"] || "the fuzziest of llamas";
-const forge = require("forge");
+const forge = require("node-forge");
 const User = require("../models/User");
 const h = require("../helpers");
 
@@ -21,6 +21,7 @@ const guardian = (req, res, next) => {
     const [username, signature] = sessionId.split(":");
 
     User.findOne({ username })
+      .populate({ path: "sharedSecrets", populate: { path: "author" } })
       .then(user => {
         if (signature === generateSignature(username)) {
           req.user = user;

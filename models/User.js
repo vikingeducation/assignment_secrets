@@ -6,7 +6,7 @@ const uniqueValidator = require("mongoose-unique-validator");
 const UserSchema = mongoose.Schema({
   username: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
-  grantedSecrets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Secret" }]
+  sharedSecrets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Secret" }]
 });
 
 UserSchema.plugin(uniqueValidator);

@@ -28,7 +28,6 @@
     "express-handlebars": "^3.0.0",
     "express-method-override-get-post-support": "0.0.7",
     "faker": "^4.1.0",
-    "forge": "^2.3.0",
     "handlebars": "^4.0.10",
     "load-helpers": "^1.0.1",
     "method-override": "^2.3.9",
@@ -36,6 +35,7 @@
     "mongoose-unique-validator": "^1.0.5",
     "mongooseeder": "^2.0.5",
     "morgan": "^1.8.2",
-    "morgan-toolkit": "^1.0.2"
+    "morgan-toolkit": "^1.0.2",
+    "node-forge": "^0.7.1"
   }
 }

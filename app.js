@@ -63,7 +63,8 @@ app.use(require("./services/Session").guardian);
 // Routes
 app.use("/auth", require("./routers/auth"));
 app.use("/users", require("./routers/users"));
-app.all("/", (req, res) => res.redirect("/users"));
+app.use("/secrets", require("./routers/secrets"));
+app.all("/", (req, res) => res.redirect("/secrets"));
 // Set up port/host
 const port = process.env.PORT || process.argv[2] || 3000;
 const host = "localhost";
