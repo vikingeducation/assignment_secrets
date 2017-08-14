@@ -16,9 +16,18 @@ const {
 
 //home
 router.get("/", loggedInOnly, (req, res) => {
-
-  return res.render("home");
+  let [username, junk] = req.cookies.sessionId.split(":");
+  console.log(`username: ${username}`);
+  User.findOne({ username: username})
+  .then((user) => {
+    return Secret.find({ owner: user._id })
+  })
+  .then((secrets) => {
+    return res.render("home", { secrets });
+  })
+  .catch(e => res.status(500).send(e.stack));
 });
+
 
 // new secret from home page
 router.post("/new", (req, res) => {
@@ -33,7 +42,7 @@ router.post("/new", (req, res) => {
           requestedViewers: [],
           approvedViewers: [user._id]
       }).save()
-    }) 
+    })
   .then((secret) => {
     return res.redirect('/secrets')
   })

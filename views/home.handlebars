@@ -9,3 +9,10 @@
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
 
+{{#if secrets.length}}
+<div class="col-12-xs">
+  {{#each secrets as |secret|}}
+    <p>{{secret.body}}</p>
+  {{/each}}
+</div>
+{{/if}}
