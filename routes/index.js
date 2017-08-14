@@ -1,36 +1,36 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
 
-const User = require("../models");
-const { loggedInOnly, loggedOutOnly } = require("../services/Session");
+const { User } = require('../models');
+const {
+	loggedInOnly,
+	loggedOutOnly,
+	createSignedSessionId
+} = require('../services/Session');
 
 /* GET home page. */
-router.get("/", loggedInOnly, function(req, res, next) {
-  //console.log(req.cookies);
-
-  res.render("index", { title: "Express" });
+router.get('/', loggedInOnly, function(req, res, next) {
+	res.redirect('/users');
 });
 
-router.get("/login", loggedOutOnly, function(req, res, next) {
-  res.render("login", { title: "Express" });
+router.get('/login', loggedOutOnly, function(req, res, next) {
+	res.render('login');
 });
 
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  console.log(User);
-  const user = await User.find({ email });
-  console.log(user);
-  if (!user) return res.send("NO USER");
+router.post('/login', async (req, res) => {
+	const { email, password } = req.body;
+	const user = await User.findOne({ email });
 
-  // 4
-  if (user.validatePassword(password)) {
-    const sessionId = createSignedSessionId(email);
-    res.cookie("sessionId", sessionId);
-    console.log(req.sessionId);
-    res.redirect("/");
-  } else {
-    res.send("UNCOOL");
-  }
+	if (!user) return res.send('NO USER');
+
+	// 4
+	if (user.validatePassword(password)) {
+		const sessionId = createSignedSessionId(email);
+		res.cookie('sessionId', sessionId);
+		res.redirect('/users');
+	} else {
+		res.send('UNCOOL');
+	}
 });
 
 module.exports = router;
