@@ -13,6 +13,7 @@ const hbs = expressHandlebars.create({
   defaultLayout: "application"
 });
 const mongoose = require("mongoose");
+const { verifySession } = require("./services/session");
 
 const login = require("./routes/login");
 
@@ -41,12 +42,14 @@ app.use((req, res, next) => {
   }
 });
 
+app.use(verifySession);
+
 //routes here
 
 app.use("/login", login);
 
 app.get("/", (req, res) => {
-  res.send("You logged in! :D")
+  res.send("You logged in! :D");
 });
 
 const port = process.env.PORT || process.argv[2] || 3000;
