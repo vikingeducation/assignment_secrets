@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { User } = require("../models");
-const { createSignedSessionId, loggedOutOnly } = require("./services/Session");
+const { createSignedSessionId, loggedOutOnly } = require("../services/Session");
 const h = require("../helpers");
 
 // Create session helper
@@ -11,7 +11,7 @@ const createSession = (res, username) => {
 };
 
 // Login routes
-router.get("/login", loggedOutOnly, (req, res) => res.render("login"));
+router.get("/login", loggedOutOnly, (req, res) => res.render("auth/login"));
 
 router.post("/login", (req, res) => {
   const { username, password } = req.body;
@@ -26,7 +26,9 @@ router.post("/login", (req, res) => {
 });
 
 // Registration Routes
-router.get("/register", loggedOutOnly, (req, res) => res.render("register"));
+router.get("/register", loggedOutOnly, (req, res) =>
+  res.render("auth/register")
+);
 
 router.post("/register", (req, res) => {
   const { username, password } = req.body;

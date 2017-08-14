@@ -2,6 +2,7 @@
 const SECRET = process.env["secret"] || "the fuzziest of llamas";
 const forge = require("forge");
 const User = require("../models/User");
+const h = require("../helpers");
 
 const createSignedSessionId = username => {
   return `${username}:${generateSignature(username)}`;
@@ -33,7 +34,7 @@ const guardian = (req, res, next) => {
 
 const loggedInOnly = (req, res, next) => {
   if (req.user) next();
-  else res.redirect("login");
+  else res.redirect(h.loginPath());
 };
 
 const loggedOutOnly = (req, res, next) => {

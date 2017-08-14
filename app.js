@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 
 // .env
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+// if (process.env.NODE_ENV !== "production") {
+//   require("dotenv").config();
+// }
 
 // Templates
 const expressHandlebars = require("express-handlebars");
@@ -22,6 +22,15 @@ app.use(express.static(`${__dirname}/public`));
 // Post Data
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Session
+const cookieSession = require("cookie-session");
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["fds89vzcxkdsqrwerdsfuzcv;jfdsqr"]
+  })
+);
 
 // Cookies
 const cookieParser = require("cookie-parser");
@@ -52,7 +61,7 @@ app.use((req, res, next) => {
 app.use(require("./services/Session").guardian);
 
 // Routes
-app.use("/", require("./routers/auth"));
+app.use("/auth", require("./routers/auth"));
 app.use("/users", require("./routers/users"));
 app.all("/", (req, res) => res.redirect("/users"));
 // Set up port/host
