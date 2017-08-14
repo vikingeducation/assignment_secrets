@@ -1,0 +1,21 @@
+{
+  "name": "assignment_secrets",
+  "version": "1.0.0",
+  "description": "Build a web app that allows users to store and share their darkest secrets.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "which nodemon > /dev/null && nodemon app.js || node app.js",
+    "seed": "node seed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thebopshoobop/assignment_secrets.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thebopshoobop/assignment_secrets/issues"
+  },
+  "homepage": "https://github.com/thebopshoobop/assignment_secrets#readme"
+}
