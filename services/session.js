@@ -1,7 +1,7 @@
 // /services/Session.js
 const secret = process.env.SECRET || "puppies";
 const md5 = require("md5");
-const User = require("../models/User");
+const User = require("../models").User;
 
 const createSignedSessionId = email => {
   return `${email}:${generateSignature(email)}`;

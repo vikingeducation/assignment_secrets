@@ -8,7 +8,7 @@ router.get("/", loggedOutOnly, (req, res) => {
 
 router.post("/", async (req, res) => {
 	const { email, password } = req.body;
-	console.log("here?");
+	console.log("here?", User);
 	let user = await User.findOne({ where: { email: email } });
 
 	if (!user) {
