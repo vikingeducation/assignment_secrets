@@ -37,39 +37,26 @@ app.use(loginMiddleware);
 ///////////////////////////////
 
 app.get("/", loggedInOnly, (req, res) => {
+  // render home page (landing with secrets)
   res.render("home");
 });
 
-// Login routes
-// 2
-app.get("/login", loggedOutOnly, (req, res) => {
-  res.render("login");
+app.get("/logout", (req, res) => {
+  res.cookie("sessionId", "", {expires: new Date()});
+  res.redirect("/");
 });
 
 //register route
-app.get("/register", loggedOutOnly, (req, res) => {
-  res.render("register");
-});
+// app.get("/register", loggedOutOnly, (req, res) => {
+//   res.render("register");
+// });
 
-app.post("/login", (req, res) => {
-  // 3
-  const { username, password } = req.body;
+const loginRoutes = require('./routes/login');
+app.use('/login', loginRoutes);
 
-  User.findOne({ username }, (err, user) => {
-    if (!user) return res.send("NO USER");
+const registerRoutes = require("./routes/register");
+app.use("/register", registerRoutes);
 
-    // 4
-    if (user.validatePassword(password)) {
-      const sessionId = createSignedSessionId(username);
-      res.cookie("sessionId", sessionId);
-//      res.redirect("/");
-//      req.flash("success", `Login Successful for user ${user.username}`);
-      res.send(`Login Successful for user ${user.username}`)
-    } else {
-      res.send("UNCOOL");
-    }
-  });
-});
 
 // Start our app
 app.listen(3000, ()=> {console.log("Now listening on port 3000");})
