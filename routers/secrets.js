@@ -16,7 +16,12 @@ router.post("/", loggedInOnly, async (req, res) => {
   res.redirect(h.secretsPath());
 });
 
-router.get("/all", async (req, res) => {
+router.get("/:id", loggedInOnly, async (req, res) => {
+  const _id = req.params.id;
+  await Secret.findOne({ _id });
+});
+
+router.get("/all", loggedInOnly, async (req, res) => {
   const shared = req.user.sharedSecrets.map(secret => secret._id);
 
   let secrets = await Secret.find().populate("author");
@@ -27,10 +32,14 @@ router.get("/all", async (req, res) => {
       body: null,
       requested: false
     };
-    if (shared.includes(secret.id)) {
+    if (shared.includes(secret._id) || secret.author._id.equals(req.user._id)) {
       mappedSecret.body = secret.body;
-    } else if (secret.requests.includes(req.user._id)) {
-      mappedSecret.requested = true;
+    }
+
+    for (let request of secret.requests) {
+      if (request.equals(req.user._id)) {
+        mappedSecret.requested = true;
+      }
     }
     return mappedSecret;
   });
