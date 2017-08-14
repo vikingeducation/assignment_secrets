@@ -1,30 +1,34 @@
-const models = require("./../models");
-const { User, Secret } = models;
-const seeds = () => {
-  console.log("Creating Users");
+const { User, Secret } = require('../models');
+const connect = require('../mongo');
 
-  for (let i = 1; i < 3; i++) {
-    var user = new User({
-      username: `user${i}`,
-      email: `email${i}@gmail.com`,
-      password: i,
-      secrets: []
-    });
-    await user.save();
-  }
+connect().then(seed);
 
-  console.log("Creating Posts");
+const seed = async () => {
+	console.log('Creating Users');
 
+	console.log('Creating Secrets');
+	const secrets = [];
+	for (let i = 1; i < 5; i++) {
+		var secret = new Secret({
+			owner: i % 3,
+			encryption: i,
+			body: `This is a post! ${i}`
+		});
+		secrets.push(secret);
+		console.log('saving secret');
+		await secret.save();
+	}
 
-  for (let i = 1; i < 21; i++) {
-    var secret = new Secret({
-      owner: users[i % 3],
-      encryption: i,
-      body: `This is a post! ${i}`
+	for (let i = 1; i < 3; i++) {
+		var user = new User({
+			username: `user${i}`,
+			email: `email${i}@gmail.com`,
+			password: `password${i}`,
+			secrets: secrets
+		});
+		console.log('saving user');
+		await user.save();
+	}
 
-    });
-  await secret.save();
-  }
-
-  Mongorito.disconnect();
+	db.disconnect();
 };

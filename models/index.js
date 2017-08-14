@@ -1,9 +1,8 @@
-var { Database, Model } = require("mongorito");
-var db = new Database("localhost/secrets");
-yield db.connect();
-var User = require("./user");
-var Secret = require("./secret");
+var models = {};
 
-db.register(User);
-db.register(Secret);
-module.exports = { db,User,Secret };
+// Load models and attach to models here
+models.User = require('./user');
+models.Secret = require('./secret');
+//... more models
+
+module.exports = models;
