@@ -1,1 +1,11 @@
-<h1>Welcome, {{currentUser.email}}</h1>
+<h1>Welcome, {{currentUser.username}}</h1>
+
+<form method="post" action="/secrets/new">
+  <div class="form-group">
+  <label for="body">Type your secret here:</label>
+  <input type="text" class="form-control" id="body" name="body">
+  </div>
+
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+

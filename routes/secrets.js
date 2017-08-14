@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-// import user model
-const User = require("./../models/User");
+// import models
+const {User, Secret} = require("./../models");
+
+//import custom middleware
 const {
   createSignedSessionId,
   loginMiddleware,
@@ -10,26 +12,28 @@ const {
   loggedOutOnly
 } = require("./../services/Session");
 
-// Login routes
-// 2
-router.get("/", loggedOutOnly, (req, res) => {
-  res.render("login");
+// Secrets routes
+
+//home
+router.get("/", loggedInOnly, (req, res) => {
+  res.render("home");
 });
 
-router.post("/", (req, res) => {
-  // 3
+// new secret from home page
+router.post("/new", (req, res) => {
+
   const { username, password } = req.body;
 
   User.findOne({ username }, (err, user) => {
     if (!user) return res.send("NO USER");
 
-    // 4
     if (user.validatePassword(password)) {
       const sessionId = createSignedSessionId(username);
       res.cookie("sessionId", sessionId);
-//      res.redirect("/");
-//      req.flash("success", `Login Successful for user ${user.username}`);
-      res.render('home')
+
+      Secret.insert
+
+      res.redirect('home')
     } else {
       res.send("UNCOOL");
     }

@@ -57,6 +57,9 @@ app.use('/login', loginRoutes);
 const registerRoutes = require("./routes/register");
 app.use("/register", registerRoutes);
 
+const secretsRoutes = require("./routes/secrets");
+app.use("/secrets", secretsRoutes);
+
 
 // Start our app
 app.listen(3000, ()=> {console.log("Now listening on port 3000");})
