@@ -1,5 +1,5 @@
 // /services/Session.js
-const SECRET = process.env.SECRET || "puppies";
+const secret = process.env.SECRET || "puppies";
 const md5 = require("md5");
 const User = require("../models/User");
 
@@ -25,21 +25,26 @@ const loggedOutOnly = (req, res, next) => {
   }
 };
 
-const loginMiddleware = (req, res, next) => {
-  const sessionId = req.cookies.sessionId;
+const loginMiddleware = async (req, res, next) => {
+  let sessionId;
+
+  if (req.cookies) {
+    sessionId = req.cookies.sessionId;
+  }
+
   if (!sessionId) return next();
 
   const [email, signature] = sessionId.split(":");
 
-  User.findOne({ email }, (err, user) => {
-    if (signature === generateSignature(email)) {
-      req.user = user;
-      res.locals.currentUser = user;
-      next();
-    } else {
-      res.send("You've tampered with your session!");
-    }
-  });
+  let user = await User.findOne({ where: { email: email } });
+
+  if (signature === generateSignature(email)) {
+    req.user = user;
+    res.locals.currentUser = user;
+    next();
+  } else {
+    res.send("You've tampered with your session!");
+  }
 };
 
 module.exports = {

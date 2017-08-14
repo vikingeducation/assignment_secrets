@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const User = require("../models/User");
+const User = require("../models").User;
 const {
 	createSignedSessionId,
 	loggedInOnly,
@@ -14,21 +14,21 @@ router.get("/login", loggedOutOnly, (req, res) => {
 	return res.send("LOGIN!");
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
-	User.findOne({ email }, (err, user) => {
-		if (!user) {
-			return res.send("NO USER!!!!");
-		}
+	let user = await User.findOne({ where: { email: email } });
 
-		if (user.comparePassword(password)) {
-			const sessionId = createSignedSessionId(email);
-			res.cookie("sessionId", sessionId);
-			res.redirect("/");
-		} else {
-			return res.send("SHAME!!!");
-		}
-	});
+	if (!user) {
+		return res.send("NO USER :(!!!");
+	}
+
+	if (user.comparePassword(password)) {
+		const sessionId = createSignedSessionId(email);
+		res.cookie("sessionId", sessionId);
+		res.redirect("/");
+	} else {
+		return res.send("SHAME!!!");
+	}
 });
 
 module.exports = router;
