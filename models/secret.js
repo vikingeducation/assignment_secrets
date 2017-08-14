@@ -1,13 +1,19 @@
-'use strict';
+"use strict";
 module.exports = function(sequelize, DataTypes) {
-  var Secret = sequelize.define('Secret', {
-    secret: DataTypes.STRING
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
+  class Secret extends sequelize.Model {
+    static associate(models) {
+      Secret.belongsTo(models.User, {
+        foreignKey: "userId"
+      });
     }
-  });
+  }
+
+  Secret.init(
+    {
+      secret: DataTypes.STRING
+    },
+    { sequelize }
+  );
+
   return Secret;
 };

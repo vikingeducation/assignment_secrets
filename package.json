@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "sequelize db:migrate:undo:all && db:migrate && db:seed:all",
+    "sql:seed": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all",
     "sql:migrate:undo": "sequelize db:migrate:undo:all",
     "start": "which nodemon > /dev/null && nodemon app.js || node app.js"
   },
@@ -20,11 +20,13 @@
   },
   "homepage": "https://github.com/EricGlover/assignment_secrets#readme",
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.5",
+    "faker": "^4.1.0",
     "pg": "^7.1.2",
     "sequelize": "^4.4.10",
     "sequelize-cli": "^2.8.0"
