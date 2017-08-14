@@ -26,6 +26,7 @@
     "express-handlebars": "^3.0.0",
     "mongoose": "^4.11.7",
     "mongoose-unique-validator": "^1.0.5",
-    "mongooseeder": "^2.0.5"
+    "mongooseeder": "^2.0.5",
+    "repl": "^0.1.3"
   }
 }
