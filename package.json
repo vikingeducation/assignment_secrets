@@ -17,5 +17,21 @@
   "bugs": {
     "url": "https://github.com/thebopshoobop/assignment_secrets/issues"
   },
-  "homepage": "https://github.com/thebopshoobop/assignment_secrets#readme"
+  "homepage": "https://github.com/thebopshoobop/assignment_secrets#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.4",
+    "express-flash-messages": "^0.1.1",
+    "express-handlebars": "^3.0.0",
+    "express-method-override-get-post-support": "0.0.7",
+    "faker": "^4.1.0",
+    "handlebars": "^4.0.10",
+    "load-helpers": "^1.0.1",
+    "method-override": "^2.3.9",
+    "mongoose": "^4.11.7",
+    "mongooseeder": "^2.0.5",
+    "morgan": "^1.8.2",
+    "morgan-toolkit": "^1.0.2"
+  }
 }
