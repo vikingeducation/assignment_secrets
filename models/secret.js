@@ -15,6 +15,7 @@ module.exports = function(sequelize, DataTypes) {
 
   Secret.init(
     {
+      authorid: DataTypes.INTEGER,
       secret: DataTypes.STRING
     },
     { sequelize }

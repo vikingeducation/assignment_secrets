@@ -7,3 +7,25 @@
   </div>
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
+
+
+<div>
+  <h3> Your secrets </h3>
+  <ul>
+  {{#each secrets as |secret|}}
+    <li>{{secret.secret}}</li>
+    <li>{{secret.RequestPermission.pending}}</li>
+    <br>
+  {{/each}}
+  </ul>
+</div>
+
+
+<div>
+  <h3> Shared Secrets </h3>
+  <ul>
+  {{#each secrets as |secret|}}
+    <li>{{secret.secret}}</li>
+  {{/each}}
+  </ul>
+</div>
