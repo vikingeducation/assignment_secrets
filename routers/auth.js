@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const { User } = require("../models");
 const { createSignedSessionId, loggedOutOnly } = require("../services/Session");
-const h = require("../helpers");
 
 // Create session helper
 const createSession = (res, username) => {

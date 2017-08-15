@@ -3,7 +3,7 @@ const { Secret, User } = require("../models");
 const h = require("../helpers");
 const { loggedInOnly } = require("../services/Session");
 
-// Display the current users secrets
+// Display the current user's secrets
 // and the secrets they have been given access to
 router.get("/", loggedInOnly, async (req, res) => {
   try {
@@ -22,9 +22,7 @@ router.get("/", loggedInOnly, async (req, res) => {
 // Create a new secret
 router.post("/", loggedInOnly, async (req, res) => {
   try {
-    const body = req.body.secret;
-    const author = req.user._id;
-    await Secret.create({ author, body });
+    await Secret.create({ author: req.user._id, body: req.body.secret });
     res.redirect(h.secretsPath());
   } catch (e) {
     res.status(500).end(e.stack);
@@ -71,11 +69,12 @@ router.get("/all", loggedInOnly, async (req, res) => {
   }
 });
 
-// Add request access to a secret for the current user
+// Request access to a secret for the current user
 router.get("/:id", loggedInOnly, async (req, res) => {
   try {
     await Secret.update(
       { _id: req.params.id },
+      // add the current user to the secrets's requests
       { $push: { requests: req.user._id } }
     );
     res.redirect("back");
@@ -90,12 +89,15 @@ router.get("/:secret/:user", loggedInOnly, async (req, res) => {
     await Secret.update(
       { _id: req.params.secret },
       {
+        // remove the current user from the secret's requests
         $pull: { requests: req.params.user },
+        // add the current user to the secrets's grants
         $push: { grants: req.params.user }
       }
     );
     await User.update(
       { _id: req.params.user },
+      // add the secret to the current users sharedSecrets
       { $push: { sharedSecrets: req.params.secret } }
     );
     res.redirect("back");
