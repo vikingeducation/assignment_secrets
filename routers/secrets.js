@@ -60,8 +60,7 @@ router.get("/all", loggedInOnly, async (req, res) => {
       Secret.find(...opts.rest).populate("author")
     ];
 
-    let [access, requested, rest] = await Promise.all(queries);
-    console.log(access);
+    const [access, requested, rest] = await Promise.all(queries);
 
     res.render("secrets/all", { access, requested, rest });
   } catch (e) {
@@ -86,20 +85,28 @@ router.get("/:id", loggedInOnly, async (req, res) => {
 // Grant a user access to a secret
 router.get("/:secret/:user", loggedInOnly, async (req, res) => {
   try {
-    await Secret.update(
-      { _id: req.params.secret },
-      {
-        // remove the current user from the secret's requests
-        $pull: { requests: req.params.user },
-        // add the current user to the secrets's grants
-        $push: { grants: req.params.user }
-      }
-    );
-    await User.update(
-      { _id: req.params.user },
-      // add the secret to the current users sharedSecrets
-      { $push: { sharedSecrets: req.params.secret } }
-    );
+    const opts = {
+      secret: [
+        { _id: req.params.secret },
+        {
+          // remove the current user from the secret's requests
+          $pull: { requests: req.params.user },
+          // add the current user to the secrets's grants
+          $push: { grants: req.params.user }
+        }
+      ],
+      user: [
+        { _id: req.params.user },
+        // add the secret to the current users sharedSecrets
+        { $push: { sharedSecrets: req.params.secret } }
+      ]
+    };
+
+    await Promise.all([
+      Secret.update(...opts.secret),
+      User.update(...opts.user)
+    ]);
+
     res.redirect("back");
   } catch (e) {
     res.status(500).end(e.stack);
