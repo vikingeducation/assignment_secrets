@@ -18,9 +18,15 @@ router.post("/login", (req, res) => {
 
   User.findOne({ username })
     .then(user => {
-      if (!user) res.send("No such user");
-      else if (user.validatePassword(password)) createSession(res, username);
-      else res.send("Bad password");
+      if (!user) {
+        req.flash("error", "No such user");
+        res.redirect("back");
+      } else if (user.validatePassword(password)) {
+        createSession(res, username);
+      } else {
+        req.flash("error", "Bad password");
+        res.redirect("back");
+      }
     })
     .catch(e => res.status(500).end(e.stack));
 });

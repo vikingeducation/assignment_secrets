@@ -27,7 +27,10 @@ const guardian = (req, res, next) => {
           req.user = user;
           res.locals.currentUser = user;
           next();
-        } else res.send("You've tampered with your session!");
+        } else {
+          req.flash("error", "You've tampered with your session!");
+          res.redirect("/");
+        }
       })
       .catch(e => res.status(500).end(e.stack));
   }

@@ -7,11 +7,12 @@ const { loggedInOnly } = require("../services/Session");
 // and the secrets they have been given access to
 router.get("/", loggedInOnly, async (req, res) => {
   try {
-    const authored = await Secret.find({ author: req.user._id }).populate({
+    const opts = { author: req.user._id };
+    const pOpts = {
       path: "requests",
-      model: "User",
       populate: { path: "author" }
-    });
+    };
+    const authored = await Secret.find(opts).populate(pOpts);
     res.render("secrets/index", { authored });
   } catch (e) {
     res.status(500).end(e.stack);
@@ -34,32 +35,37 @@ router.post("/", loggedInOnly, async (req, res) => {
 // and those we have been given access to
 router.get("/all", loggedInOnly, async (req, res) => {
   try {
-    const shared = req.user.sharedSecrets.map(secret => secret._id);
+    const opts = {
+      // all of the secrets we wrote or have been given access to
+      access: {
+        $or: [{ grants: req.user }, { author: req.user }]
+      },
+      // all of the secrets we have asked for (only include author and id)
+      request: [{ requests: req.user }, { _id: 1, author: 1 }],
+      // all of the other requests (only include author and id)
+      // (we neither authored nor requested them, nor have we been granted access)
+      rest: [
+        {
+          $nor: [
+            { author: req.user },
+            { requests: req.user },
+            { grants: req.user }
+          ]
+        },
+        { _id: 1, author: 1 }
+      ]
+    };
 
-    let secrets = await Secret.find().populate("author");
-    secrets = secrets.map(secret => {
-      let mappedSecret = {
-        id: secret._id,
-        author: secret.author,
-        body: null,
-        requested: false
-      };
-      if (
-        shared.includes(secret._id) ||
-        secret.author._id.equals(req.user._id)
-      ) {
-        mappedSecret.body = secret.body;
-      }
+    const queries = [
+      Secret.find(opts.access).populate("author"),
+      Secret.find(...opts.request).populate("author"),
+      Secret.find(...opts.rest).populate("author")
+    ];
 
-      for (let request of secret.requests) {
-        if (request.equals(req.user._id)) {
-          mappedSecret.requested = true;
-        }
-      }
-      return mappedSecret;
-    });
+    let [access, requested, rest] = await Promise.all(queries);
+    console.log(access);
 
-    res.render("secrets/all", { secrets });
+    res.render("secrets/all", { access, requested, rest });
   } catch (e) {
     res.status(500).end(e.stack);
   }
@@ -83,7 +89,10 @@ router.get("/:secret/:user", loggedInOnly, async (req, res) => {
   try {
     await Secret.update(
       { _id: req.params.secret },
-      { $pull: { requests: req.params.user } }
+      {
+        $pull: { requests: req.params.user },
+        $push: { grants: req.params.user }
+      }
     );
     await User.update(
       { _id: req.params.user },
