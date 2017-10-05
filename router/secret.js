@@ -7,12 +7,6 @@ var models = require("./../models");
 var User = mongoose.model("User");
 var Secret = mongoose.model("Secret");
 var Secretrequest = mongoose.model("Secretrequest");
-// const {
-//   createSignedSessionId,
-//   loginMiddleware,
-//   loggedInOnly,
-//   loggedOutOnly
-// } = require("../services/sessions");
 
 module.exports = app => {
   router.get("/", async (req, res) => {
@@ -50,7 +44,57 @@ module.exports = app => {
     var posts = await Secret.find()
       .populate({ path: "createdBy", model: "User" })
       .populate({ path: "permissions", model: "User" });
+    //check posts for permission
+    for (var i = 0; i < posts.length; i++) {
+      var keep = false;
+      for (var j = 0; j < posts[i].permissions.length; j++) {
+        if (posts[i].permissions[j].username === user.username) {
+          keep = true;
+        }
+      }
+      if (!keep) {
+        posts[i].post = "";
+      }
+    }
     res.render("secrets/all", { posts });
+  });
+
+  router.get("/approval/:reqId", async (req, res) => {
+    var requestItem = await Secretrequest.findById(req.params.reqId).populate({
+      path: "post",
+      model: "Secret"
+    });
+    console.log(requestItem);
+    var updatedPost = requestItem.post;
+    updatedPost.permissions.push(requestItem.requesting);
+    updatedPost.save(function(err) {
+      if (err) {
+        console.log("ERRRRR");
+      } else {
+        Secretrequest.findByIdAndRemove(requestItem.id).then(() => {
+          res.redirect("back");
+        });
+      }
+    });
+  });
+
+  router.get("/denail/:reqId", (req, res) => {
+    res.redirect("back");
+  });
+
+  router.get("/request/:postId/:createdById", async (req, res) => {
+    var newRequest = new Secretrequest({
+      post: req.params.postId,
+      postAuthor: req.params.createdById,
+      requesting: req.user._id
+    });
+    newRequest.save(function(err) {
+      if (err) {
+        console.log("ERRRR");
+      } else {
+        res.redirect("back");
+      }
+    });
   });
 
   return router;
