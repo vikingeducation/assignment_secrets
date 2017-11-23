@@ -1,0 +1,35 @@
+{
+	"name": "assignment_secrets",
+	"version": "1.0.0",
+	"description": "Build a web app that allows users to store and share their darkest secrets.",
+	"main": "app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/coelacanth7/assignment_secrets.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/coelacanth7/assignment_secrets/issues"
+	},
+	"homepage": "https://github.com/coelacanth7/assignment_secrets#readme",
+	"dependencies": {
+		"bcrypt": "^1.0.2",
+		"body-parser": "^1.17.1",
+		"cookie-parser": "^1.4.3",
+		"express": "^4.16.2",
+		"express-handlebars": "^3.0.0",
+		"express-method-override-get-post-support": "^1.0.0",
+		"hbs": "^4.0.1",
+		"md5": "^2.2.1",
+		"method-override": "^2.3.10",
+		"mongoose": "^4.9.5",
+		"mongoose-unique-validator": "^1.0.5",
+		"morgan": "^1.9.0",
+		"morgan-toolkit": "^1.0.2"
+	}
+}
