@@ -1,0 +1,19 @@
+<div class="row mb5">
+  <div class="col-sm-8">
+    <h2>Secrets</h2>
+    {{#each secrets as |secret|}}
+    <div class="border mb-3">
+      <h6>By: {{secret.createdBy.username}} At: {{secret.createdAt}}</h6>
+      {{#if secret.text}}
+      <h4>{{secret.text}}</h4>
+      {{else}}
+        {{#if secret.alreadyreq}}
+        <button class="btn btn-primary" type="button" name="button">Already requested</button>
+        {{else}}
+        <a href="/request/{{secret._id}}"><button class="btn btn-primary" type="button" name="button">Request</button></a>
+        {{/if}}
+      {{/if}}
+    </div>
+    {{/each}}
+  </div>
+</div>
