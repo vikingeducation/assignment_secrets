@@ -7,10 +7,10 @@
       {{#if secret.text}}
       <h4>{{secret.text}}</h4>
       {{else}}
-        {{#if secret.requests}}
-        <a href="/request"><button class="btn btn-primary" type="button" name="button">Request</button></a>
-        {{else}}
+        {{#if secret.alreadyreq}}
         <button class="btn btn-primary" type="button" name="button">Already requested</button>
+        {{else}}
+        <a href="/request/{{secret._id}}"><button class="btn btn-primary" type="button" name="button">Request</button></a>
         {{/if}}
       {{/if}}
     </div>

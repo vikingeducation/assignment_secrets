@@ -25,16 +25,20 @@ router.get("/all", async (req, res) => {
 		.populate({ path: "requests", model: "User" });
 
 	// modify secret objects so only the right people can see
-	secrets.forEach(secret => {
+	await secrets.forEach(secret => {
 		secret.permission.forEach(permission => {
 			if (permission._id != req.user.id) {
 				secret.text = null;
 			}
 		});
+	});
 
+	// populate objects temporarily to discern whether
+	// a request has been made yet
+	await secrets.forEach(secret => {
 		secret.requests.forEach(request => {
-			if (request._id != req.user.id) {
-				secret.requests = null;
+			if (request._id == req.user.id) {
+				secret.alreadyreq = true;
 			}
 		});
 	});
@@ -52,6 +56,18 @@ router.post("/new", (req, res) => {
 	});
 	newSecret.save();
 	res.redirect("/");
+});
+
+// request to view a secrets
+router.get("/request/:secretid", (req, res) => {
+	Secret.update(
+		{ _id: req.params.secretid },
+		{ $push: { requests: req.user._id } },
+		err => {
+			if (err) throw err;
+		}
+	);
+	res.redirect("/all");
 });
 
 module.exports = router;
