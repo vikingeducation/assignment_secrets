@@ -13,10 +13,13 @@ router.get("/", loggedInOnly, async (req, res) => {
 		model: "User"
 	});
 	var othersSecrets = await Secret.find({
-		createdBy: { $ne: req.body._id },
-		permission: { $in: [req.body.id] }
+		createdBy: { $ne: req.user._id },
+		permission: { $in: [req.user.id] }
+	}).populate({
+		path: "createdBy",
+		model: "User"
 	});
-	console.log("secrets", JSON.stringify(secrets, 0, 2));
+	console.log("othersSecrets", JSON.stringify(othersSecrets, 0, 2));
 	res.render("home/index", { secrets, othersSecrets });
 });
 

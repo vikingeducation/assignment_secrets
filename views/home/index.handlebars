@@ -36,9 +36,9 @@
     {{#if othersSecrets}}
     {{#each othersSecrets as |secret|}}
     <div class="border mb-3">
-      <h4>{{secret.createdAt}}</h4>
-      <p>{{secret.text}}</p>
-      <h5>by:</h5>
+      <h6>{{secret.createdAt}}</h6>
+      <h4>{{secret.text}}</h4>
+      <h6>by: {{secret.createdBy.username}}</h6>
     </div>
     {{/each}}
     {{else}}
