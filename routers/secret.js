@@ -8,7 +8,10 @@ const { loggedInOnly } = require("./../services/session");
 
 // Get homepage
 router.get("/", loggedInOnly, async (req, res) => {
-	var secrets = await Secret.find({ createdBy: req.user._id });
+	var secrets = await Secret.find({ createdBy: req.user._id }).populate({
+		path: "requests",
+		model: "User"
+	});
 	var othersSecrets = await Secret.find({
 		createdBy: { $ne: req.body._id },
 		permission: { $in: [req.body.id] }
@@ -69,5 +72,7 @@ router.get("/request/:secretid", (req, res) => {
 	);
 	res.redirect("/all");
 });
+
+//
 
 module.exports = router;
