@@ -27,25 +27,18 @@ router.get("/all", async (req, res) => {
 		.populate({ path: "permission", model: "User" })
 		.populate({ path: "requests", model: "User" });
 
-	// modify secret objects so only the right people can see
-	await secrets.forEach(secret => {
-		secret.permission.forEach(permission => {
-			if (permission._id == req.user.id) {
-				console.log("permission granter");
-			} else {
-				secret.text = null;
-			}
-		});
-	});
+	secrets.forEach(secret => {
+		// for eaach secret check if current User is premitted to see
+		var permitted = secret.permission.map(el => el.username);
+		if (!permitted.includes(req.user.username)) {
+			secret.text = null;
+		}
 
-	// populate objects temporarily to discern whether
-	// a request has been made yet
-	await secrets.forEach(secret => {
-		secret.requests.forEach(request => {
-			if (request._id == req.user.id) {
-				secret.alreadyreq = true;
-			}
-		});
+		// check if user has already requested to see
+		var pendingRequest = secret.requests.map(el => el.username);
+		if (pendingRequest.includes(req.user.username)) {
+			secret.alreadyreq = true;
+		}
 	});
 
 	console.log("secrets", JSON.stringify(secrets, 0, 2));
