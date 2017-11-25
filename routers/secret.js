@@ -30,7 +30,9 @@ router.get("/all", async (req, res) => {
 	// modify secret objects so only the right people can see
 	await secrets.forEach(secret => {
 		secret.permission.forEach(permission => {
-			if (permission._id != req.user.id) {
+			if (permission._id == req.user.id) {
+				console.log("permission granter");
+			} else {
 				secret.text = null;
 			}
 		});
@@ -73,6 +75,33 @@ router.get("/request/:secretid", (req, res) => {
 	res.redirect("/all");
 });
 
-//
+// accept a requests
+router.get("/accept/:secretid/:requestid", (req, res) => {
+	Secret.update(
+		{ _id: req.params.secretid },
+		{
+			$push: { permission: req.params.requestid },
+			$pull: { requests: req.params.requestid }
+		},
+		err => {
+			if (err) throw err;
+		}
+	);
+	res.redirect("/");
+});
+
+// Deny a requests
+router.get("/decline/:secretid/:requestid", (req, res) => {
+	Secret.update(
+		{ _id: req.params.secretid },
+		{
+			$pull: { requests: req.params.requestid }
+		},
+		err => {
+			if (err) throw err;
+		}
+	);
+	res.redirect("/");
+});
 
 module.exports = router;

@@ -22,8 +22,8 @@
       {{#if secret.requests}}
         {{#each secret.requests as |request|}}
           <h4>{{request.username}}</h4>
-          <a class="btn btn-primary" href="/accept/{{request._id}}">Accept</a>
-          <a class="btn btn-danger" href="/decline/{{request._id}}">Decline</a>
+          <a class="btn btn-primary" href="/accept/{{secret._id}}/{{request._id}}">Accept</a>
+          <a class="btn btn-danger" href="/decline/{{secret._id}}/{{request._id}}">Decline</a>
         {{/each}}
       {{/if}}
     {{/each}}
