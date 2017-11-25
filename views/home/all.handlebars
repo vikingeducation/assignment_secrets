@@ -1,0 +1,11 @@
+<div class="row mb5">
+  <div class="col-sm-8">
+    <h2>Secrets</h2>
+    {{#each secrets as |secret|}}
+    <div class="border mb-3">
+      <h4>By: {{secret.createdBy.email}} At: {{secret.createdAt}}</h4>
+      <p>{{secret.text}}</p>
+    </div>
+    {{/each}}
+  </div>
+</div>

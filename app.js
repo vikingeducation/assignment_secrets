@@ -48,8 +48,11 @@ const { loginMiddleware } = require("./services/session");
 app.use(loginMiddleware);
 
 // routes
-var loginRouter = require("./routers/login")(app);
+var loginRouter = require("./routers/login");
 app.use("/", loginRouter);
+
+var secretRouter = require("./routers/secret");
+app.use("/", secretRouter);
 
 // Start
 app.listen(2000);

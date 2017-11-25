@@ -1,1 +1,42 @@
 <h1>Welcome, {{currentUser.email}}</h1>
+
+<div class="row mb-5">
+  <form class="form" action="/new" method="post">
+    <h2>New Secret</h2>
+    <div class="form-group">
+      <label for="secretText">Example textarea</label>
+      <textarea name="secret" class="form-control" id="secretText" rows="3"></textarea>
+    </div>
+    <input class="btn btn-primary" type="submit" name="" value="Post a new Secret">
+  </form>
+</div>
+
+<div class="row mb5">
+  <div class="col-sm-8">
+    <h2>My Secrets</h2>
+    {{#each secrets as |secret|}}
+    <div class="border mb-3">
+      <h4>{{secret.createdAt}}</h4>
+      <p>{{secret.text}}</p>
+    </div>
+    {{/each}}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-8">
+    <h2>Others secrets they have shared with Me</h2>
+    {{#if othersSecrets}}
+    {{#each othersSecrets as |secret|}}
+    <div class="border mb-3">
+      <h4>{{secret.createdAt}}</h4>
+      <p>{{secret.text}}</p>
+      <h5>by:</h5>
+    </div>
+    {{/each}}
+    {{else}}
+    <h5>No one has shared there secrets with you yet</h5>
+    {{/if}}
+
+  </div>
+</div>
