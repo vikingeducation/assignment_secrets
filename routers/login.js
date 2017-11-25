@@ -16,12 +16,12 @@ router.get("/login", loggedOutOnly, (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-	const { email, password } = req.body;
-	User.findOne({ email }, (err, user) => {
+	const { username, password } = req.body;
+	User.findOne({ username }, (err, user) => {
 		if (!user) return res.send("NO USER");
 
 		if (user.validatePassword(password)) {
-			const sessionId = createSignedSessionId(email);
+			const sessionId = createSignedSessionId(username);
 			res.cookie("sessionId", sessionId);
 			res.redirect("/");
 		} else {
@@ -36,12 +36,12 @@ router.get("/register", loggedOutOnly, (req, res) => {
 });
 
 router.post("/register", (req, res) => {
-	const { email, password } = req.body;
-	const newUser = new User({ email, password });
+	const { username, password } = req.body;
+	const newUser = new User({ username, password });
 	newUser.save((err, user) => {
 		if (err) return res.send("ERROR");
 
-		const sessionId = createSignedSessionId(email);
+		const sessionId = createSignedSessionId(username);
 		res.cookie("sessionId", sessionId);
 		res.redirect("/");
 	});

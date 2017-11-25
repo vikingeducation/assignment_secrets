@@ -2,11 +2,11 @@ const secret = process.env["secret"] || "puppies";
 const md5 = require("md5");
 const User = require("../models/User");
 
-const createSignedSessionId = email => {
-	return `${email}:${generateSignature(email)}`;
+const createSignedSessionId = username => {
+	return `${username}:${generateSignature(username)}`;
 };
 
-const generateSignature = email => md5(email + secret);
+const generateSignature = username => md5(username + secret);
 
 const loggedInOnly = (req, res, next) => {
 	if (req.user) {
@@ -28,10 +28,10 @@ const loginMiddleware = (req, res, next) => {
 	const sessionId = req.cookies.sessionId;
 	if (!sessionId) return next();
 
-	const [email, signature] = sessionId.split(":");
+	const [username, signature] = sessionId.split(":");
 
-	User.findOne({ email }, (err, user) => {
-		if (signature === generateSignature(email)) {
+	User.findOne({ username }, (err, user) => {
+		if (signature === generateSignature(username)) {
 			req.user = user;
 			res.locals.currentUser = user;
 			next();

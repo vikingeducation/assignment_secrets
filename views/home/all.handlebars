@@ -3,8 +3,16 @@
     <h2>Secrets</h2>
     {{#each secrets as |secret|}}
     <div class="border mb-3">
-      <h4>By: {{secret.createdBy.email}} At: {{secret.createdAt}}</h4>
-      <p>{{secret.text}}</p>
+      <h6>By: {{secret.createdBy.username}} At: {{secret.createdAt}}</h6>
+      {{#if secret.text}}
+      <h4>{{secret.text}}</h4>
+      {{else}}
+        {{#if secret.requests}}
+        <a href="/request"><button class="btn btn-primary" type="button" name="button">Request</button></a>
+        {{else}}
+        <button class="btn btn-primary" type="button" name="button">Already requested</button>
+        {{/if}}
+      {{/if}}
     </div>
     {{/each}}
   </div>

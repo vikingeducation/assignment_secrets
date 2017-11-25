@@ -23,6 +23,22 @@ router.get("/all", async (req, res) => {
 		.populate({ path: "createdBy", model: "User" })
 		.populate({ path: "permission", model: "User" })
 		.populate({ path: "requests", model: "User" });
+
+	// modify secret objects so only the right people can see
+	secrets.forEach(secret => {
+		secret.permission.forEach(permission => {
+			if (permission._id != req.user.id) {
+				secret.text = null;
+			}
+		});
+
+		secret.requests.forEach(request => {
+			if (request._id != req.user.id) {
+				secret.requests = null;
+			}
+		});
+	});
+
 	console.log("secrets", JSON.stringify(secrets, 0, 2));
 	res.render("home/all", { secrets });
 });
