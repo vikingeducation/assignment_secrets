@@ -1,0 +1,22 @@
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Secrets!</a>
+      <ul class="nav navbar-nav navbar-right pull-right">
+        {{#if currentUser}}
+          <li><a href="/home">{{displayFullName currentUser}}</a></li>
+          <li><a href="/secrets">All Secrets</a></li>
+          <li><a href="/logout" id="logout-link">Logout</a></li>
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+</nav>
+<form action="/logout" id="logout" method="POST">
+</form>
+<script type="text/javascript">
+  $("#logout-link").click(e => {
+    e.preventDefault();
+    $("form#logout").submit();
+  });
+</script>
