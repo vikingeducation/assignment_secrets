@@ -1,0 +1,24 @@
+.navbar-header {
+  width: 100%;
+}
+
+.navbar-brand {
+  font-size: 24px !important;
+}
+
+div.request {
+  width: 100%;
+}
+
+.inline, .request-status {
+  display: inline;
+}
+
+.requester-name {
+  margin-right: 20px;
+  display: inline;
+}
+
+.no-access {
+  margin-bottom: 10px;
+}
