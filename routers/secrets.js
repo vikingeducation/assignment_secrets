@@ -36,13 +36,21 @@ router.get("/", async function(req, res) {
 
     let unauthSecrets = [];
     secrets.forEach(secret => {
-      console.log(typeof secret._id);
-      console.log(typeof user.authorizedSecrets[0]);
+
+      if (user.authorizedSecrets.filter(el => el.toString() === secret._id.toString()).length > 0) {
+        authSecrets.push(secret);
+      } else {
+        unauthSecrets.push(secret);
+      }
+
+      /*
+
       if (user.authorizedSecrets.includes(secret._id)) {
         authSecrets.push(secret);
       } else {
         unauthSecrets.push(secret);
       }
+      */
     });
     console.log("authSecrets");
     console.log(authSecrets);
