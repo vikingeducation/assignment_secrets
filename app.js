@@ -22,10 +22,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // ----------------------------------------
 // Sessions/Cookies
 // ----------------------------------------
-const cookieSession = require("cookie-session");
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
+const mongoose = require("mongoose");
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState) {
+    next();
+  } else {
+    require("./mongo")().then(() => next());
+  }
+});
+
 
 // Require our User model and Session helpers
-const User = require("./models/User");
+const User = require("./models/user");
 const {
   createSignedSessionId,
   loginMiddleware,
@@ -35,6 +46,9 @@ const {
 
 // Mount our custom loginMiddleware
 app.use(loginMiddleware);
+
+
+
 
 // ----------------------------------------
 // Flash Messages
@@ -58,10 +72,7 @@ app.use(
 // ----------------------------------------
 // Referrer
 // ----------------------------------------
-app.use((req, res, next) => {
-  req.session.backUrl = req.header("Referer") || "/";
-  next();
-});
+
 
 // ----------------------------------------
 // Public
@@ -79,8 +90,49 @@ app.use(morganToolkit());
 // ----------------------------------------
 // Routes
 // ----------------------------------------
+
+
+// Home route
+// 1
+app.get("/", loggedInOnly, (req, res) => {
+  res.render("home");
+});
+
+// Login routes
+// 2
+app.get("/login", loggedOutOnly, (req, res) => {
+  res.render("login");
+});
+
+app.post("/login", (req, res) => {
+  // 3
+  const { email, password } = req.body;
+  console.log(`Req.body.email is ${req.body.email}`)
+  console.log(`Req.body.password is ${req.body.password}`)
+  console.log(`Email object ${{email}}`)
+
+  User.findOne({ email }, (err, user) => {
+    if (!user) return res.send("NO USER");
+
+    // 4
+    console.log(`User is ${user}`)
+    if (user.validatePassword(password)) {
+      console.log("VALID PASSWORD")
+      const sessionId = createSignedSessionId(email);
+      res.cookie("sessionId", sessionId);
+      res.redirect("/");
+    } else {
+      res.send("UNCOOL");
+    }
+  });
+});
+
+// Logout route
+app.get("/logout", (req, res) => {
+  res.cookie("sessionId", "", { expires: new Date() });
+  res.redirect("/");
+});
 app.use("/", (req, res) => {
-  req.flash("Hi!");
   res.render("welcome/index");
 });
 
@@ -120,41 +172,7 @@ if (require.main === module) {
 // Routes
 // ----------------------------------------
 
-// Home route
-// 1
-app.get("/", loggedInOnly, (req, res) => {
-  res.render("home");
-});
 
-// Login routes
-// 2
-app.get("/login", loggedOutOnly, (req, res) => {
-  res.render("login");
-});
-
-app.post("/login", (req, res) => {
-  // 3
-  const { email, password } = req.body;
-
-  User.findOne({ email }, (err, user) => {
-    if (!user) return res.send("NO USER");
-
-    // 4
-    if (user.validatePassword(password)) {
-      const sessionId = createSignedSessionId(email);
-      res.cookie("sessionId", sessionId);
-      res.redirect("/");
-    } else {
-      res.send("UNCOOL");
-    }
-  });
-});
-
-// Logout route
-app.get("/logout", (req, res) => {
-  res.cookie("sessionId", "", { expires: new Date() });
-  res.redirect("/");
-});
 
 // ----------------------------------------
 // Error Handling

@@ -8,7 +8,7 @@ const createSignedSessionId = email => {
 const generateSignature = email => md5(email + SECRET);
 
 
-const User = require("../models/User");
+const User = require("../models/user");
 
 const loginMiddleware = (req, res, next) => {
   const sessionId = req.cookies.sessionId;

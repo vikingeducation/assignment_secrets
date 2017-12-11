@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const mongooseeder = require("mongooseeder");
 const models = require("../models");
-const { User, Post, Comment } = require("../models");
+const User = models.User;
 
 //for database
 var env = process.env.NODE_ENV || "development";
@@ -10,9 +10,9 @@ var config = require("./../config/mongo")[env];
 // Always use the MongoDB URL to allow
 // easy connection in all environments
 const mongodbUrl =
-  process.env.NODE_ENV === "production"
-    ? process.env[config.use_env_variable]
-    : `mongodb://${config.host}/${config.database}`;
+  process.env.NODE_ENV === "production" ?
+  process.env[config.use_env_variable] :
+  `mongodb://${config.host}/${config.database}`;
 
 mongooseeder.seed({
   mongodbUrl: mongodbUrl,
