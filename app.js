@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const secrets = require('./routers/secrets');
 
 // ----------------------------------------
 // App Variables
@@ -126,13 +127,7 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-// new secret route
-app.post("/secrets", (req, res) => {
-  Secret.save({
-    body: secretBody,
-    author: req.user.email
-  });
-});
+app.use('/secrets', secrets);
 
 app.use("/", (req, res) => {
   res.render("welcome/index");
