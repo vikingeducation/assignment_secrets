@@ -18,6 +18,7 @@ router.post("/", async function(req, res) {
     let user = await User.findOne(req.user._id);
     console.log(user);
     user.authorizedSecrets.push(savedSecret._id);
+    user.secrets.push(savedSecret._id);
     await user.save();
     res.redirect("/");
   } catch (e) {
@@ -25,42 +26,59 @@ router.post("/", async function(req, res) {
   }
 });
 
+// displaying all secrets
+
 router.get("/", async function(req, res) {
   try {
     let user = await User.findOne({ _id: req.user._id });
-    let secrets = await Secret.find();
-
+    let secrets = await Secret.find().populate("approvedUsers author");
 
     let authSecrets = [];
-    console.log(user.authorizedSecrets);
 
     let unauthSecrets = [];
     secrets.forEach(secret => {
-
-      if (user.authorizedSecrets.filter(el => el.toString() === secret._id.toString()).length > 0) {
+      if (
+        user.authorizedSecrets.filter(
+          el => el.toString() === secret._id.toString()
+        ).length > 0
+      ) {
         authSecrets.push(secret);
       } else {
         unauthSecrets.push(secret);
       }
-
-      /*
-
-      if (user.authorizedSecrets.includes(secret._id)) {
-        authSecrets.push(secret);
-      } else {
-        unauthSecrets.push(secret);
-      }
-      */
     });
-    console.log("authSecrets");
-    console.log(authSecrets);
-    console.log("unauthSecrets");
-    console.log(unauthSecrets);
-    console.log("authSecretsIds");
-    console.log(authSecretsIds);
-    console.log("secrets");
-    console.log(secrets);
-    res.render("secretsIndex", { authSecrets, unauthSecrets });
+    res.render("secretsIndex", {
+      authSecrets,
+      unauthSecrets,
+      userId: req.user._id.toString()
+    });
+  } catch (e) {}
+});
+
+// requesting access to secret
+
+router.post("/request", async (req, res, next) => {
+  try {
+    let secret = await Secret.findOne({ _id: req.body.secretId });
+    let user = await User.findOne({ _id: req.body.userId });
+    secret.requestedUsers.push(user._id);
+    await secret.save();
+    console.log("secret-------");
+    console.log(secret);
+    res.redirect("back");
+  } catch (e) {}
+});
+
+// displaying a user's secret
+
+router.get("/yoursecrets", async (req, res, next) => {
+  try {
+    let user = await User.findOne({ _id: req.user._id }).populate({
+      path: "secrets",
+      populate: { path: "requestedUsers", model: "User" }
+    });
+
+    res.render("home", { secrets: user.secrets });
   } catch (e) {}
 });
 

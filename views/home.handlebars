@@ -7,7 +7,24 @@
 
 <hr />
 <h3>Your Secrets</h3>
+{{#each secrets as |secret|}}
+<div>
+  {{secret.text}}
+</div>
+<p>
+  Requests
+</p>
+{{#each secret.requestedUsers as |requestedUser|}}
+{{requestedUser.email}}
+<form action='/accept' method='post'>
+  <span><input type='submit' class='btn' value='Accept' /></span>
+</form>
 
+<form action='/reject' method='post'>
+ <span><input type='submit' class='btn' value='Reject' /></span>
+</form>
+{{/each}}
+{{/each}}
 
 <hr />
 <h3>Shared Secrets</h3>
