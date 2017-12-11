@@ -12,6 +12,12 @@ const UserSchema = mongoose.Schema({
       type: Schema.Types.ObjectId,
       ref: "Secret"
     }
+  ],
+  authorizedSecrets: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Secret"
+    }
   ]
 });
 
