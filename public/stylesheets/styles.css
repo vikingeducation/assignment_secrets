@@ -1,0 +1,27 @@
+html, body {
+  background-color: aliceblue;
+  text-align: center;
+}
+h1 {
+  color: blue;
+}
+.secret {
+  margin: 5px;
+  padding: 10px;
+  border-radius: 5px;
+}
+.access {
+  border-left: 3px solid green;
+}
+.requested {
+border-left: 3px solid blue;
+}
+.no-access {
+  border-left: 3px solid red;
+}
+.owned {
+  border-left: 3px solid magenta;
+}
+.inline {
+  display: inline-block;
+}

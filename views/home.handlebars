@@ -1,0 +1,54 @@
+<div style="margin-top: 150px;">
+  <h1 class="page-header"><u>New Secret</u></h1>
+  <br>
+  <form action="/new" method="POST">
+    <div class="form-group">
+      <textarea class="form-control" rows="3" placeholder="Tell me a secret..." name="newSecret"></textarea>
+    </div>
+    <div>
+      <button type="submit" class="btn btn-primary">Save Secret</button>
+    </div>
+  </form>
+  <br>
+  <hr>
+  <h1 class="page-header"><u>Your Secrets</u></h1>
+  {{#each secrets as |secret|}}
+    <div class="secret owned">
+      <p><strong>{{secret.body}}</strong></p>
+      <p>-- <cite>By {{secret.ownerId.username}} on {{formatDate secret.createdAt}}</cite></p>
+
+      {{#if secret.requestedUsers.length}}
+        <h5 style="color:blue"><u>Requests:</u></h5>
+        <ul style="list-style-type:disc; list-style-position:inside;">
+          {{#each secret.requestedUsers as |request|}}
+            <li>
+              <span style="color:blue; font-size:20px">{{request.username}}: </span>
+              <form method="POST" action="/accept" class="inline">
+                <input type="hidden" value="{{secret._id}}" name="secretId">
+                <input type="hidden" value="{{request._id}}" name="giveAccessId">
+                <button class="btn btn-success">Accept</button>
+              </form>
+              <form method="POST" action="/reject" class="inline">
+                <input type="hidden" value="{{secret._id}}" name="secretId">
+                <input type="hidden" value="{{request._id}}" name="giveAccessId">
+                <button class="btn btn-danger">Reject</button>
+              </form>
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    </div>
+    <br>
+  {{/each}}
+  <hr>
+  <h1 class="page-header"><u>Shared Secrets</u></h1>
+  <br>
+  {{#each accessedSecrets as |secret|}}
+    <div class="secret access">
+      <p><strong>{{secret.body}}</strong></p>
+      <p>-- <cite>By {{secret.ownerId.username}} on {{formatDate secret.createdAt}}</cite></p>
+    </div>
+    <br>
+  {{/each}}
+  <br>
+</div>
