@@ -34,9 +34,9 @@ app.use((req, res, next) => {
   }
 });
 
-
 // Require our User model and Session helpers
 const User = require("./models/user");
+const Secret = require("./models/secret");
 const {
   createSignedSessionId,
   loginMiddleware,
@@ -46,9 +46,6 @@ const {
 
 // Mount our custom loginMiddleware
 app.use(loginMiddleware);
-
-
-
 
 // ----------------------------------------
 // Flash Messages
@@ -73,7 +70,6 @@ app.use(
 // Referrer
 // ----------------------------------------
 
-
 // ----------------------------------------
 // Public
 // ----------------------------------------
@@ -91,7 +87,6 @@ app.use(morganToolkit());
 // Routes
 // ----------------------------------------
 
-
 // Home route
 // 1
 app.get("/", loggedInOnly, (req, res) => {
@@ -107,17 +102,15 @@ app.get("/login", loggedOutOnly, (req, res) => {
 app.post("/login", (req, res) => {
   // 3
   const { email, password } = req.body;
-  console.log(`Req.body.email is ${req.body.email}`)
-  console.log(`Req.body.password is ${req.body.password}`)
-  console.log(`Email object ${{email}}`)
+  // console.log(`Req.body.email is ${req.body.email}`);
+  // console.log(`Req.body.password is ${req.body.password}`);
+  // console.log(`Email object ${{ email }}`);
 
   User.findOne({ email }, (err, user) => {
     if (!user) return res.send("NO USER");
 
     // 4
-    console.log(`User is ${user}`)
     if (user.validatePassword(password)) {
-      console.log("VALID PASSWORD")
       const sessionId = createSignedSessionId(email);
       res.cookie("sessionId", sessionId);
       res.redirect("/");
@@ -132,6 +125,15 @@ app.get("/logout", (req, res) => {
   res.cookie("sessionId", "", { expires: new Date() });
   res.redirect("/");
 });
+
+// new secret route
+app.post("/secrets", (req, res) => {
+  Secret.save({
+    body: secretBody,
+    author: req.user.email
+  });
+});
+
 app.use("/", (req, res) => {
   res.render("welcome/index");
 });
@@ -171,8 +173,6 @@ if (require.main === module) {
 // ----------------------------------------
 // Routes
 // ----------------------------------------
-
-
 
 // ----------------------------------------
 // Error Handling
