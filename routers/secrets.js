@@ -13,7 +13,12 @@ router.post("/", async function(req, res) {
       author: req.user._id,
       approvedUsers: [req.user._id]
     });
-    await secret.save();
+
+    let savedSecret = await secret.save();
+    let user = await User.findOne(req.user._id);
+    console.log(user);
+    user.authorizedSecrets.push(savedSecret._id);
+    await user.save();
     res.redirect("/");
   } catch (e) {
     console.log(e);
@@ -21,23 +26,22 @@ router.post("/", async function(req, res) {
 });
 
 router.get("/", async function(req, res) {
-  console.log("inside get");
   try {
-    let user = await User.find({ _id: req.user._id });
-    console.log("inside find");
+    let user = await User.findOne({ _id: req.user._id });
     let secrets = await Secret.find();
-    let authSecretsIds = [];
+
+
     let authSecrets = [];
-    console.log(user);
-    user.authorizedSecrets.forEach(secretObj => {
-      authSecretsIds.push(secretObj["_id"]);
-    });
+    console.log(user.authorizedSecrets);
+
     let unauthSecrets = [];
     secrets.forEach(secret => {
-      if (!authSecretsIds.includes(secret._id)) {
-        unauthSecrets.push(secret);
-      } else {
+      console.log(typeof secret._id);
+      console.log(typeof user.authorizedSecrets[0]);
+      if (user.authorizedSecrets.includes(secret._id)) {
         authSecrets.push(secret);
+      } else {
+        unauthSecrets.push(secret);
       }
     });
     console.log("authSecrets");
