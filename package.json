@@ -1,24 +1,11 @@
 {
   "name": "assignment_secrets",
   "version": "1.0.0",
-  "description": "Build a web app that allows users to store and share their darkest secrets.",
+  "description": "",
   "main": "app.js",
   "directories": {
     "lib": "lib"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SamuelLangenfeld/assignment_secrets.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/SamuelLangenfeld/assignment_secrets/issues"
-  },
-  "homepage": "https://github.com/SamuelLangenfeld/assignment_secrets#readme",
   "dependencies": {
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
@@ -34,5 +21,19 @@
     "mongoose": "^4.13.6",
     "morgan": "^1.9.0",
     "morgan-toolkit": "^1.0.2"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamuelLangenfeld/assignment_secrets.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SamuelLangenfeld/assignment_secrets/issues"
+  },
+  "homepage": "https://github.com/SamuelLangenfeld/assignment_secrets#readme"
 }

@@ -35,19 +35,6 @@ app.use(cookieSession({
   ]
 }));
 
-const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/test");
-const User = require("./models/User");
-const {
-  createSignedSessionId,
-  loginMiddleware,
-  loggedInOnly,
-  loggedOutOnly
-} = require("./services/Session");
-
-app.use(loginMiddleware);
-
-
 app.use((req, res, next) => {
   res.locals.session = req.session;
   next();
