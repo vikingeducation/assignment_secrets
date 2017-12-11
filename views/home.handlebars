@@ -17,12 +17,16 @@
 {{#each secret.requestedUsers as |requestedUser|}}
 {{requestedUser.email}}
 <form action='/accept' method='post'>
-  <span><input type='submit' class='btn' value='Accept' /></span>
+  <input type='hidden' name='secretId' value="{{../secret._id}}" />
+  <input type='hidden' name='userId' value="{{requstedUser_id}}" />
+  <span><input type='submit' class='btn btn-primary' value='Accept' /></span>
 </form>
-
 <form action='/reject' method='post'>
- <span><input type='submit' class='btn' value='Reject' /></span>
+  <input type='hidden' name='secretId' value="{{../secret._id}}" />
+    <input type='hidden' name='userId' value="{{requstedUser_id}}" />
+ <span><input type='submit' class='btn btn-danger' value='Reject' /></span>
 </form>
+<br />
 {{/each}}
 {{/each}}
 

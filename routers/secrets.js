@@ -61,10 +61,17 @@ router.post("/request", async (req, res, next) => {
   try {
     let secret = await Secret.findOne({ _id: req.body.secretId });
     let user = await User.findOne({ _id: req.body.userId });
-    secret.requestedUsers.push(user._id);
-    await secret.save();
-    console.log("secret-------");
-    console.log(secret);
+    if (
+      !(
+        secret.requestedUsers.filter(
+          el => el.toString() === user._id.toString()
+        ).length > 0
+      )
+    ) {
+      secret.requestedUsers.push(user._id);
+      await secret.save();
+    }
+
     res.redirect("back");
   } catch (e) {}
 });
@@ -77,6 +84,25 @@ router.get("/yoursecrets", async (req, res, next) => {
       path: "secrets",
       populate: { path: "requestedUsers", model: "User" }
     });
+
+    res.render("home", { secrets: user.secrets });
+  } catch (e) {}
+});
+
+// accpeting secret request
+
+router.get("/accept", async (req, res, next) => {
+  try {
+    let secret = await Secret.findOne({ _id: req.body.secretId });
+    let user = await User.findOne({ _id: req.body.userId });
+    let index = secret.requestedUsers.findIndex(userObj => {
+      return userObj._id.equals(user._id);
+    });
+    secret.requestedUsers.splice(index, 1);
+    secret.approvedUsers.push(user._id);
+    user.authorizedSecrets.push(secret._id);
+    await secret.save();
+    await user.save();
 
     res.render("home", { secrets: user.secrets });
   } catch (e) {}
