@@ -1,0 +1,34 @@
+<h3>New Secrets</h3>
+
+<form method='post' action='/secrets'>
+<textarea name='secret' class='form-control'>Tell Me a Secret...</textarea><br />
+<input type='submit' class='btn btn-primary' />
+</form>
+
+<hr />
+<h3>Your Secrets</h3>
+{{#each secrets as |secret|}}
+<div>
+  {{secret.text}}
+</div>
+<p>
+  Requests
+</p>
+{{#each secret.requestedUsers as |requestedUser|}}
+{{requestedUser.email}}
+<form action='/accept' method='post'>
+  <input type='hidden' name='secretId' value="{{../secret._id}}" />
+  <input type='hidden' name='userId' value="{{requstedUser_id}}" />
+  <span><input type='submit' class='btn btn-primary' value='Accept' /></span>
+</form>
+<form action='/reject' method='post'>
+  <input type='hidden' name='secretId' value="{{../secret._id}}" />
+    <input type='hidden' name='userId' value="{{requstedUser_id}}" />
+ <span><input type='submit' class='btn btn-danger' value='Reject' /></span>
+</form>
+<br />
+{{/each}}
+{{/each}}
+
+<hr />
+<h3>Shared Secrets</h3>
