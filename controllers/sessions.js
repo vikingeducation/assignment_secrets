@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const models = require('./../models');
+const helpers = require('./../helpers').registered;
 const {
   createSignedSessionId,
   loginMiddleware,

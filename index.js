@@ -37,18 +37,18 @@ app.use((req, res, next) => {
 });
 
 const expressHandlebars = require('express-handlebars');
-const helpers = require('./helpers');
+const helpers = require('./helpers').registered;
 
 const hbs = expressHandlebars.create({
   partialsDir: 'views/',
   defaultLayout: 'application',
-  helpers: helpers.registered
+  helpers: helpers
 });
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
-app.use('loginMiddleware');
+// app.use(helpers.loginMiddleware);
 
 // Routes
 const sessions = require('./controllers/sessions');
