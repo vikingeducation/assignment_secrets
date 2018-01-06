@@ -14,15 +14,13 @@ app.use(
   })
 );
 
-// app.use((req, res, next) => {
-//   res.locals.session = req.session;
-//   next();
-// });
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
 
-// const flash = require('express-flash-messages');
-// app.use(flash());
-
-// app.use(express.static(`${__dirname}/public`));
+const flash = require('express-flash-messages');
+app.use(flash());
 
 const morgan = require('morgan');
 app.use(morgan('tiny'));
@@ -48,12 +46,16 @@ const hbs = expressHandlebars.create({
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
-// app.use(helpers.loginMiddleware);
+app.use(helpers.loginMiddleware);
 
 // Routes
 const sessions = require('./controllers/sessions');
+const secrets = require('./controllers/secrets');
+const requests = require('./controllers/requests');
 
 app.use('/', sessions);
+app.use('/', secrets);
+app.use('/requests', requests);
 
 const port = process.env.PORT || process.argv[2] || 3000;
 const host = 'localhost';

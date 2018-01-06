@@ -12,7 +12,7 @@ const createSignedSessionId = email => {
 const generateSignature = email => md5(email + secret);
 
 const loggedInOnly = (req, res, next) => {
-  if (req.session.user) {
+  if (req.user) {
     next();
   } else {
     res.redirect('/login');
@@ -20,7 +20,7 @@ const loggedInOnly = (req, res, next) => {
 };
 
 const loggedOutOnly = (req, res, next) => {
-  if (!req.session.user) {
+  if (!req.user) {
     next();
   } else {
     res.redirect('/');
@@ -28,14 +28,14 @@ const loggedOutOnly = (req, res, next) => {
 };
 
 const loginMiddleware = (req, res, next) => {
-  const sessionId = req.session.id;
+  const sessionId = req.cookies.sessionId;
   if (!sessionId) return next();
 
   const [email, signature] = sessionId.split(':');
 
   User.findOne({ email }, (err, user) => {
     if (signature === generateSignature(email)) {
-      req.session.user = user;
+      req.user = user;
       res.locals.currentUser = user;
       next();
     } else {
